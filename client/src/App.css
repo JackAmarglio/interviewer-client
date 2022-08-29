@@ -1,0 +1,12 @@
+#landingImg {
+    width: 100%;
+    height: 100%;
+}
+.recaptcha-container >div >div{
+    width: 100% !important;
+}
+.recaptcha-container >div >div>div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
