@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "../../env";
-import { getUserInfo } from "../../utils/auth";
 import Box from "@mui/material/Box";
 import { Typography, Select, Grid, MenuItem, TextField } from "@mui/material";
-
+import countryList from 'react-select-country-list'
 const Dashboard = (props) => {
     const { loggedIn, dispatch } = props;
     const [year, setYear] = React.useState('');
@@ -16,12 +15,18 @@ const Dashboard = (props) => {
     const handleChangeLang = (e) => {
         setLang(e.target.value)
     }
+    const [value, setValue] = useState('')
+    const options = useMemo(() => countryList().getData(), [])
+    const changeHandler = value => {
+        setValue(value)
+    }
+
     return (
         <Box padding="80px" display="flex">
             <Grid item xs={6}>
-                <img src="" alt="logoImage" />
+                <img src="logo.png" alt="logoImage" width="100%" height="350px" />
             </Grid>
-            <Grid item xs={6}>
+            <Grid item xs={6} marginLeft="50px">
                 <Box display="flex">
                     <Typography>Languages</Typography>
                     <Select
@@ -72,6 +77,7 @@ const Dashboard = (props) => {
                 </Box>
                 <Box display="flex" marginTop="30px">
                     <Typography>Location</Typography>
+                    <Select options={options} value={value} onChange={changeHandler} />
                 </Box>
             </Grid>
         </Box>
