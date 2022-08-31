@@ -10,3 +10,14 @@
     align-items: center;
     justify-content: center;
 }
+
+.phone_number {
+    border: 1px solid gray;
+    outline: none;
+    width: 200px;
+    background-color: white;
+    font-size: 15px;
+    margin-left: 30px;
+    border-radius: 15px;
+    height: 40px;
+}

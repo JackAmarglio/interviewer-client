@@ -34,15 +34,16 @@ function SignUp(props) {
         confirmpassword: "",
         agreeTerms: false,
         g_captcha_response: "",
-        companyInfo: "",
-        website: "",
-        contact: "",
-        address: "",
-        avatar: ""
+        phoneNumber: "",
+        location: "",
+        availableTime: "",
+        experience: "",
+        language: ""
     });
     const recaptchaRef = createRef();
+    const history = useHistory()
     const [isLoading, setIsLoading] = useState(false);
-    const { firstName, lastName, email, password, confirmpassword, companyInfo, website, contact, address, avatar } = state;
+    const { firstName, lastName, email, password, confirmpassword, language, experience, availableTime, location, phoneNumber } = state;
     const handleSubmit = function (event) {
         event.preventDefault();
         if (!isEmail(state.email)) {
@@ -105,6 +106,7 @@ function SignUp(props) {
                 return;
             }
         }));
+        history.push("/signin")
     };
     const agreedTerms = function () {
         setState({ ...state, agreeTerms: !state.agreeTerms });
