@@ -19,7 +19,6 @@ import { connect } from "react-redux";
 import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { Register } from "../../utils/auth";
-
 import { toast } from 'react-toastify';
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { useHistory } from "react-router-dom";
@@ -46,61 +45,13 @@ function SignUpOrg(props) {
         g_captcha_response: ""
     });
     const { firstName, email, password, confirmpassword, companyInfo, address, website, contact } = state;
+    const history = useHistory()
 
     const handleSubmit = function (event) {
         event.preventDefault();
 
         if (!isEmail(state.email)) {
             toast("Please Input Correct Email!", {
-                type: "warning",
-                progress: undefined
-            });
-            return;
-        }
-        // if(state.website && !isEmail(state.website)){
-        //     toast("Please Input Correct Website!",{
-        //         type: "warning",
-        //         progress: undefined
-        //     });
-        //     return;
-        // }
-        if (!state.firstName) {
-            toast("Please Input Organisation represtant!", {
-                type: "warning",
-                progress: undefined
-            });
-            return;
-        }
-        // if(!state.lastName){
-        //     toast("Please Input Last Name!",{
-        //         type: "warning",
-        //         progress: undefined
-        //     });
-        //     return;
-        // }
-        if (!state.companyInfo) {
-            toast("Please Input Organisation Name!", {
-                type: "warning",
-                progress: undefined
-            });
-            return;
-        }
-        // if(!state.website){
-        //     toast("Please Input Website Link!",{
-        //         type: "warning",
-        //         progress: undefined
-        //     });
-        //     return;
-        // }
-        if (!isEmail(state.contact)) {
-            toast("Please Input Correct Contact Email!", {
-                type: "warning",
-                progress: undefined
-            });
-            return;
-        }
-        if (!state.address) {
-            toast("Please Input Organization Address", {
                 type: "warning",
                 progress: undefined
             });
@@ -135,7 +86,7 @@ function SignUpOrg(props) {
             return;
         }
         setIsLoading(true);
-        dispatch(Register({ ...state, isUser: false }, (error) => {
+        dispatch(Register({ ...state, isInterpreter: false }, (error) => {
             if (error) {
                 setIsLoading(false);
                 toast(error, {
@@ -145,6 +96,7 @@ function SignUpOrg(props) {
                 return;
             }
         }));
+        history.push("/signin")
     };
 
     const agreedTerms = function () {
@@ -181,7 +133,7 @@ function SignUpOrg(props) {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">
-                            Sign up as organization
+                            Sign up as client
                         </Typography>
                         <Box
                             component="form"
@@ -190,32 +142,6 @@ function SignUpOrg(props) {
                             sx={{ mt: 3 }}
                         >
                             <Grid container spacing={1}>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        autoComplete="given-name"
-                                        name="firstName"
-                                        required
-                                        fullWidth
-                                        id="firstName"
-                                        label="Organisation representant"
-                                        value={firstName}
-                                        onChange={handleChange}
-                                        autoFocus
-                                    />
-                                </Grid>
-                                {/* { <Grid item xs={12} sm={6}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        display="none"
-                                        id="lastName"
-                                        label="Last Name"
-                                        name="lastName"
-                                        value={lastName}
-                                        onChange={handleChange}
-                                        autoComplete="family-name"
-                                    />
-                                </Grid>} */}
                                 <Grid item xs={12}>
                                     <TextField
                                         required
@@ -252,55 +178,6 @@ function SignUpOrg(props) {
                                         value={confirmpassword}
                                         onChange={handleChange}
                                         autoComplete="confirmpassword"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="companyInfo"
-                                        label="Organisation Name"
-                                        name="companyInfo"
-                                        value={companyInfo}
-                                        onChange={handleChange}
-                                        autoComplete="companyInfo"
-                                        placeholder="ex:IT, Bank, Medical..."
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="address"
-                                        label="Organisation Address"
-                                        name="address"
-                                        value={address}
-                                        onChange={handleChange}
-                                        autoComplete="address"
-                                    />
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="website"
-                                        label="Website"
-                                        name="website"
-                                        value={website}
-                                        onChange={handleChange}
-                                        autoComplete="website"
-                                    />
-                                </Grid>
-                                <Grid item xs={12} display="true">
-                                    <TextField
-                                        required
-                                        fullWidth
-                                        id="contact"
-                                        label="Contact Email"
-                                        name="contact"
-                                        value={contact}
-                                        onChange={handleChange}
-                                        autoComplete="contact"
                                     />
                                 </Grid>
 

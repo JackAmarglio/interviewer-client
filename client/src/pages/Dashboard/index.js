@@ -10,8 +10,7 @@ import InputMask from "react-input-mask";
 import { HeaderBar } from "../layout/HeaderBar";
 import { toast } from "react-toastify";
 
-const Dashboard = (props) => {
-    const { loggedIn, dispatch } = props;
+const Dashboard = () => {
     const [year, setYear] = React.useState('');
     const [lang, setLang] = React.useState('');
     const [time, setTime] = React.useState('');
@@ -22,6 +21,22 @@ const Dashboard = (props) => {
     const handleChangeLang = (e) => {
         setLang(e.target.value)
     }
+    const [userId, setUserId] = useState()
+    useEffect(() => {
+        const url = window.location.href
+        console.log(url.lastIndexOf(), 'last index')
+        const id = url.substring(url.indexOf("dashboard") + 10, url.length)
+        setUserId(id);
+        let bearToken = localStorage.getItem("eventBearerToken")
+        axios
+            .get(`${API_URL}/auth/get`, { headers: { 'Authorization': `EventTracker ${bearToken}` } }, {
+                params: {
+                    userId: userId
+                },
+            })
+            .then((res) => console.log(res.data, '----------'))
+            .catch((err) => console.log(err))
+    }, [])
     const options = [
         { label: "English", value: "English" },
         { label: "Chinese", value: "Chinese" },
@@ -30,9 +45,7 @@ const Dashboard = (props) => {
     const [selected, setSelected] = useState([]);
 
     const saveInterpreterInfo = () => {
-        const url = window.location.href
-        console.log(url.lastIndexOf(), 'last index')
-        const userId = url.substring(url.indexOf("dashboard") + 10, url.length)
+
         const state = {
             language: lang,
             experience: year,

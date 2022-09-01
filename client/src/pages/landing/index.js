@@ -25,12 +25,11 @@ function LandingPage(props) {
                 <Grid item md={7}>
                     <ShowText>
                         <Typography variant="h3">
-                            React Events
+                            Interpreter-Client site
                         </Typography>
                         <Typography variant="h6">
-                            Lorem ipsum dolor sit amet, consectetur adipisicing
-                            elit. Quos blanditiis tenetur. Lorem ipsum dolor sit
-                            amet.
+                            Clients can use this site to get proper interpreter and interpreters can use this to get jobs.
+                            We provide a good opportunity for clients and interpreters.
                         </Typography>
                     </ShowText>
                 </Grid>
@@ -65,7 +64,7 @@ function LandingPage(props) {
                             Sign In
                         </Button>
                     </Typography>
-                    
+
                 </Grid>
 
             </Grid>

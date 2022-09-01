@@ -75,7 +75,7 @@ function HeaderBar(props) {
                         sx={{ flexGrow: 1 }}
                     >
 
-                        React Events
+                        Interpreter-Client
                     </Typography>
                     {loggedIn == false && (
                         <>

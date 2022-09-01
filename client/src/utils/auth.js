@@ -26,8 +26,6 @@ const IsLoggedIn = () => {
             console.log(e)
             dispatch({ type: "LOG_OUT" });
         }
-
-
     };
 };
 const LogIn = (data, callback) => {
