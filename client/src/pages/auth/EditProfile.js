@@ -164,7 +164,7 @@ function EditProfile(props) {
         <ThemeProvider theme={theme}>
             {/* {isLoading && <LoadingIndicator />} */}
             <Box sx={{ flexGrow: 1, overflowX: "hidden" }} margin="1% 3%">
-                <HeaderBar />
+                {/* <HeaderBar /> */}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box

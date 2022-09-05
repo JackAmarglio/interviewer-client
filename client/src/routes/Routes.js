@@ -12,6 +12,9 @@ import { VerifyStatus } from "../pages/auth/VerifyStatus";
 import { EditProfile } from "../pages/auth/EditProfile"
 import { connect } from "react-redux";
 import SuccessScreen from "../components/SuccessScreen";
+import ClientInfo from "../pages/ClientInfo"
+import InterpreterInfo from "../pages/InterpreterData"
+
 function Routes(props) {
     const { loggedIn } = props;
     return (
@@ -26,6 +29,8 @@ function Routes(props) {
                     <Route exact path="/forgotpassword"><ForgotPassword /></Route>
                     <Route exact path="/resetPassword"><ResetPassword /></Route>
                     <Route exact path="/dashboard:id"><Dashboard /></Route>
+                    <Route exact path="/clientinfo"><ClientInfo /></Route>
+                    <Route exact path="/interpreterinfo"><InterpreterInfo /></Route>
                     <Redirect to={{ pathname: "/" }} />
                 </Switch>
             </Switch>

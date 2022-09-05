@@ -11,6 +11,7 @@ import { HeaderBar } from "../layout/HeaderBar";
 import { toast } from "react-toastify";
 import { alpha, styled } from '@mui/material/styles';
 import { pink } from '@mui/material/colors';
+import { useHistory } from "react-router-dom"
 
 const Dashboard = (props) => {
     const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -35,6 +36,7 @@ const Dashboard = (props) => {
     const [notavailable, setNotAvailable] = useState(false)
     const [schedule, setSchedule] = useState(false)
     const [availability, setAvailability] = useState()
+    const history = useHistory()
 
     const handleChangeExperience = (event) => {
         setYear(event.target.value);
@@ -70,6 +72,8 @@ const Dashboard = (props) => {
     console.log(url.lastIndexOf(), 'last index')
     const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
     const [isClient, setIsClient] = useState('')
+    const email = "d.kurtiedu@gmail.com"
+    const [adminEmail, setAdminEmail] = useState()
     useEffect(() => {
         axios
             .get(`${API_URL}/auth/get`, {
@@ -77,7 +81,10 @@ const Dashboard = (props) => {
                     userId: userId
                 },
             })
-            .then((res) => setIsClient(res.data.data))
+            .then((res) => {
+                setIsClient(res.data.data)
+                setAdminEmail(res.data.email)
+            })
             .catch((err) => console.log(err))
     }, [])
     const options = [
@@ -125,7 +132,11 @@ const Dashboard = (props) => {
 
     return (
         <>
-            {isClient === "Interpreter" && <Box>
+            {adminEmail === email && <Box left="45%" display="flex" position="absolute" top="30%" flexDirection="column">
+                <Button onClick={() => history.push("./clientinfo")}>Client Data</Button>
+                <Button onClick={() => history.push("./interpreterinfo")}>Interpreter Data</Button>
+            </Box>}
+            {isClient === "Interpreter" && adminEmail !== email && <Box>
                 <HeaderBar />
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>
@@ -221,7 +232,7 @@ const Dashboard = (props) => {
                 </Box>
             </Box>
             }
-            {isClient === "Client" && <Box>
+            {isClient === "Client" && adminEmail !== email && <Box>
                 <HeaderBar />
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>

@@ -58,7 +58,7 @@ function ForgotPassword(props) {
         <ThemeProvider theme={theme}>
             {/* {isLoading && <LoadingIndicator />} */}
             <Box sx={{ flexGrow: 1, overflowX: "hidden" }} margin="2% 5%">
-                <HeaderBar />
+                {/* <HeaderBar /> */}
                 <Container component="main" maxWidth="xs">
                     <CssBaseline />
                     <Box
