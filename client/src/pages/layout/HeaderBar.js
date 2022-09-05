@@ -18,6 +18,7 @@ function HeaderBar(props) {
     const [isLoading, setIsLoading] = useState(false);
     const handleLogout = function () {
         dispatch(LogOut());
+        history.push("/")
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -65,7 +66,8 @@ function HeaderBar(props) {
     return (
         <Box sx={{ flexGrow: 1 }}>
             {/* {isLoading && <LoadingIndicator />} */}
-            <AppBar position="static" color="secondary">
+            {/* <AppBar position="static" color="secondary" backgroundColor="black"> */}
+            <Box backgroundColor="black" color="white">
                 <Toolbar>
                     {/* <FontAwesomeIcon onClick={clickHomeButton} icon={faHome} size="5x" style={{ marginLeft: 0, marginRight: 20, backgroundColor: "transparent" }} /> */}
                     <Box width={2} height={80} style={{ backgroundColor: 'white' }} />
@@ -122,7 +124,8 @@ function HeaderBar(props) {
                         </React.Fragment>
                     )}
                 </Toolbar>
-            </AppBar>
+                {/* </AppBar> */}
+            </Box>
         </Box>
     );
 }
