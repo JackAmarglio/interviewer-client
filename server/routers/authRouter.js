@@ -15,13 +15,16 @@ const router = Router();
 // Endpoint for Register
 router.post("/", async (req, res) => {
     console.log(req.body, '-------')
-    const { firstName, lastName, email, password, isInterpreter, companyInfo, website, contact, address, avatar } = req.body;
+    const { firstName, lastName, email, password, isInterpreter, location, language, experience, availableTime, phoneNumber } = req.body;
+    console.log(email, password, '=======')
     if (isInterpreter && (!firstName || !lastName || !email || !password)) {
+        console.log('true')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
     }
-    if (!isInterpreter && (!firstName || !email || !password || !companyInfo || !contact || !address || !avatar)) {
+    if (!isInterpreter && (!email || !password)) {
+        console.log('false')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
@@ -34,53 +37,52 @@ router.post("/", async (req, res) => {
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);
-    let emailConfirmed = false;
     const newUser = new User({
         firstName,
         lastName,
         email,
-        avatar,
         passwordHash,
         isInterpreter,
-        companyInfo,
-        address,
-        website,
-        contact,
-        emailConfirmed
+        location,
+        experience,
+        language,
+        phoneNumber,
+        availableTime
     });
 
     const savedUser = await newUser.save();
+    res.send({ user: savedUser })
 
-    const token = jwt.sign(
-        {
-            userId: savedUser._id,
-            isInterpreter: isInterpreter,
-            emailConfirmed: false,
-        },
-        process.env["JWT_SECRET"],
-        {
-            expiresIn: process.env["TOKEN_EXPIRATION_TIME"]
-        }
-    );
+    // const token = jwt.sign(
+    //     {
+    //         userId: savedUser._id,
+    //         isInterpreter: isInterpreter,
+    //         emailConfirmed: false,
+    //     },
+    //     process.env["JWT_SECRET"],
+    //     {
+    //         expiresIn: process.env["TOKEN_EXPIRATION_TIME"]
+    //     }
+    // );
 
     // sending verify email
-    let emailVerifyToken = jwt.sign(
-        {
-            userId: savedUser._id
-        },
-        process.env["JWT_EMAIL_VERIFY_SECRET"]
-    );
-    let verifyUrl = `${process.env["FRONT_URL"]}/verifyEmail?token=${emailVerifyToken}`;
-    const draft = nylas.drafts.build({
-        subject: 'Verify Email',
-        body: `<html>
-                 Please click <a href="${verifyUrl}">this url</a> to verify your email!
-                </html>`,
-        to: [{ name: 'My Event Friend', email: savedUser.email }]
-    });
-    draft.send();
+    // let emailVerifyToken = jwt.sign(
+    //     {
+    //         userId: savedUser._id
+    //     },
+    //     process.env["JWT_EMAIL_VERIFY_SECRET"]
+    // );
+    // let verifyUrl = `${process.env["FRONT_URL"]}/verifyEmail?token=${emailVerifyToken}`;
+    // const draft = nylas.drafts.build({
+    //     subject: 'Verify Email',
+    //     body: `<html>
+    //              Please click <a href="${verifyUrl}">this url</a> to verify your email!
+    //             </html>`,
+    //     to: [{ name: 'My Event Friend', email: savedUser.email }]
+    // });
+    // draft.send();
 
-    res.send({ token: token });
+    // res.send({ token: token });
 });
 
 // Endpoint for Login
@@ -284,5 +286,54 @@ router.post("/resetPassword", (req, res) => {
     })
 
 });
+
+router.post("/info", (req, res) => {
+    const { language, experience, time, phoneNumber, userId, availableTime, firstName, lastName, company } = req.body;
+    User.findById(userId, function (err, user) {
+        if (!user) res.status(404).send("file is not found");
+        else {
+            if (user.isInterpreter == true) {
+                user.language = language;
+                user.experience = experience;
+                user.time = time;
+                user.phoneNumber = phoneNumber;
+                user.availableTime = availableTime;
+            }
+            else {
+                user.firstName = firstName;
+                user.lastName = lastName;
+                user.phoneNumber = phoneNumber
+                user.company = company
+            }
+            user
+                .save()
+                .then((user) => {
+                    res.json("user updated!");
+                })
+                .catch((err) => {
+                    res.status(400).send("Update not possible");
+                });
+        }
+    });
+})
+
+router.get("/get", (req, res) => {
+    console.log(req.query, '-----');
+    const userId = req.query.userId;
+    User.findById(userId, function (err, user) {
+        if (!user) res.status(404).send("user is not found");
+        else {
+            console.log(user, 'user')
+            user.isInterpreter == true ? res.send({ data: "Interpreter", email: user.email }) : res.send({ data: "Client", email: user.email })
+        }
+    })
+})
+
+router.get("/clientinfo", (req, res) => {
+    User.find({ isInterpreter: false }).then((users) => res.send({ data: users }))
+})
+router.get("/interpreterinfo", (req, res) => {
+    User.find({ isInterpreter: true }).then((users) => res.send({ data: users }))
+})
 
 export default router;
