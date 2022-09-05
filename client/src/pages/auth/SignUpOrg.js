@@ -82,7 +82,6 @@ function SignUpOrg(props) {
                 type: "warning",
                 progress: undefined
             });
-            console.log(recaptchaRef)
             return;
         }
         setIsLoading(true);
@@ -105,7 +104,6 @@ function SignUpOrg(props) {
     const handleChange = function (event) {
         const { name, value } = event.target;
         setState({ ...state, [name]: value });
-        console.log(state)
     };
     const onChange = function (value) {
         setState({ ...state, g_captcha_response: value });

@@ -16,14 +16,12 @@ const IsLoggedIn = () => {
 
             if (userData.exp && Date.now() < userData.exp * 1000) {
                 //// token is valid token
-                console.log("logged in already")
                 dispatch({ type: "LOG_IN" });
                 dispatch({ type: "EMAIL_CONFIRMED", payload: userData.emailConfirmed });
             } else {
                 dispatch({ type: "LOG_OUT" });
             }
         } catch (e) {
-            console.log(e)
             dispatch({ type: "LOG_OUT" });
         }
     };
@@ -143,7 +141,6 @@ const VerifyEmail = (search, callback) => {
         };
         _axios()(options).then((resp) => {
             let decoded = jwtDecode(resp.data.token, JWT_SECRET);
-            console.log(decoded);
             localStorage.setItem("eventBearerToken", resp.data.token);
             dispatch({ type: "EMAIL_CONFIRMED", payload: true });
             callback && callback(false);
