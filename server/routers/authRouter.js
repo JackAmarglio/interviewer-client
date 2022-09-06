@@ -1,5 +1,6 @@
 import Router from "express";
 import { User } from "../models/userModel.js";
+import { Client } from "../models/clientModel.js"
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -15,15 +16,15 @@ const router = Router();
 // Endpoint for Register
 router.post("/", async (req, res) => {
     console.log(req.body, '-------')
-    const { firstName, lastName, email, password, isInterpreter, location, language, experience, availableTime, phoneNumber } = req.body;
+    const { firstName, lastName, email, password, location, language, experience, availableTime, phoneNumber } = req.body;
     console.log(email, password, '=======')
-    if (isInterpreter && (!firstName || !lastName || !email || !password)) {
+    if (!firstName || !lastName || !email || !password) {
         console.log('true')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
     }
-    if (!isInterpreter && (!email || !password)) {
+    if (!email || !password) {
         console.log('false')
         return res
             .status(404)
@@ -36,18 +37,19 @@ router.post("/", async (req, res) => {
     }
 
     const saltRounds = 10;
+    const isInterpreter = "interpreter"
     const passwordHash = await bcrypt.hash(password, saltRounds);
     const newUser = new User({
         firstName,
         lastName,
         email,
         passwordHash,
-        isInterpreter,
         location,
         experience,
         language,
         phoneNumber,
-        availableTime
+        availableTime,
+        isInterpreter
     });
 
     const savedUser = await newUser.save();
@@ -85,6 +87,46 @@ router.post("/", async (req, res) => {
     // res.send({ token: token });
 });
 
+router.post("/client", async (req, res) => {
+    console.log(req.body, '-------')
+    const { firstName, lastName, email, password, location, phoneNumber, company } = req.body;
+    console.log(email, password, '=======')
+    if (!email || !password) {
+        console.log('true')
+        return res
+            .status(404)
+            .json({ msg: "Please Provide all necessary fields" });
+    }
+    if (!email || !password) {
+        console.log('false')
+        return res
+            .status(404)
+            .json({ msg: "Please Provide all necessary fields" });
+    }
+
+    const existingclient = await Client.findOne({ email });
+    if (existingclient) {
+        return res.status(400).json({ msg: "Client Already Exists!" });
+    }
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+    const isInterpreter = "client"
+    const newClient = new Client({
+        firstName,
+        lastName,
+        email,
+        passwordHash,
+        location,
+        phoneNumber,
+        company,
+        isInterpreter
+    });
+
+    const savedClient = await newClient.save();
+    res.send({ client: savedClient })
+})
+
 // Endpoint for Login
 router.post("/login", async (req, res) => {
     const { email, password } = req.body;
@@ -96,31 +138,54 @@ router.post("/login", async (req, res) => {
     const matchUser = await User.findOne({ email });
 
     if (!matchUser) {
-        return res.status(401).json({ msg: "Email or Password is invalid!" });
-    }
+        const matchClient = await Client.findOne({ email })
+        if (!matchClient)
+            return res.status(401).json({ msg: "Email or Password is invalid!" });
+        const matchPassword = await bcrypt.compare(
+            password,
+            matchClient.passwordHash
+        );
 
-    const matchPassword = await bcrypt.compare(
-        password,
-        matchUser.passwordHash
-    );
-
-    if (!matchPassword) {
-        return res.status(401).json({ msg: "Email or Password is invalid!" });
-    }
-    const token = jwt.sign(
-        {
-            userId: matchUser._id,
-            isInterpreter: matchUser.isInterpreter,
-            emailConfirmed: matchUser.emailConfirmed,
-        },
-        process.env["JWT_SECRET"],
-        {
-            expiresIn: process.env["TOKEN_EXPIRATION_TIME"]
+        if (!matchPassword) {
+            return res.status(401).json({ msg: "Email or Password is invalid!" });
         }
-    );
-    console.log(process.env["COOKIE_SECURE"])
-    console.log(matchUser._id, 'id')
-    res.send({ token: token, id: matchUser._id });
+        const token = jwt.sign(
+            {
+                userId: matchClient._id,
+                emailConfirmed: matchClient.emailConfirmed,
+            },
+            process.env["JWT_SECRET"],
+            {
+                expiresIn: process.env["TOKEN_EXPIRATION_TIME"]
+            }
+        );
+        console.log(process.env["COOKIE_SECURE"])
+        console.log(matchClient._id, 'id')
+        res.send({ token: token, id: matchClient._id });
+    }
+    else {
+        const matchPassword = await bcrypt.compare(
+            password,
+            matchUser.passwordHash
+        );
+
+        if (!matchPassword) {
+            return res.status(401).json({ msg: "Email or Password is invalid!" });
+        }
+        const token = jwt.sign(
+            {
+                userId: matchUser._id,
+                emailConfirmed: matchUser.emailConfirmed,
+            },
+            process.env["JWT_SECRET"],
+            {
+                expiresIn: process.env["TOKEN_EXPIRATION_TIME"]
+            }
+        );
+        console.log(process.env["COOKIE_SECURE"])
+        console.log(matchUser._id, 'id')
+        res.send({ token: token, id: matchUser._id });
+    }
 });
 
 // Endpoint for Logout
@@ -226,7 +291,6 @@ router.get("/verifyEmail", (req, res) => {
             const token = jwt.sign(
                 {
                     userId: req.user.userId,
-                    isInterpreter: req.user.isInterpreter,
                     emailConfirmed: true
                 },
                 process.env["JWT_SECRET"],
@@ -257,7 +321,6 @@ router.post("/resetPassword", (req, res) => {
                     const newToken = jwt.sign(
                         {
                             userId: user._id,
-                            isInterpreter: user.isInterpreter,
                             emailConfirmed: true
                         },
                         process.env["JWT_SECRET"],
@@ -290,20 +353,27 @@ router.post("/resetPassword", (req, res) => {
 router.post("/info", (req, res) => {
     const { language, experience, time, phoneNumber, userId, availableTime, firstName, lastName, company } = req.body;
     User.findById(userId, function (err, user) {
-        if (!user) res.status(404).send("file is not found");
+        if (!user) {
+            Client.findById(userId, function (err, client) {
+                client.firstName = firstName;
+                client.lastName = lastName;
+                client.phoneNumber = phoneNumber
+                client.company = company
+                client.save()
+                    .then((client) => res.json("client updated"))
+                    .catch((error) => console.log(error, 'error'))
+                if (!client) {
+                    res.status(404).send("file is not found");
+                }
+            })
+        }
         else {
-            if (user.isInterpreter == true) {
+            if (user.isInterpreter == "interpreter") {
                 user.language = language;
                 user.experience = experience;
                 user.time = time;
                 user.phoneNumber = phoneNumber;
                 user.availableTime = availableTime;
-            }
-            else {
-                user.firstName = firstName;
-                user.lastName = lastName;
-                user.phoneNumber = phoneNumber
-                user.company = company
             }
             user
                 .save()
@@ -321,19 +391,26 @@ router.get("/get", (req, res) => {
     console.log(req.query, '-----');
     const userId = req.query.userId;
     User.findById(userId, function (err, user) {
-        if (!user) res.status(404).send("user is not found");
+        if (!user) {
+            Client.findById(userId, function (err, client) {
+                res.send({ data: "client", email: client.email })
+                if (!client) {
+                    res.status(404).send("user is not found");
+                }
+            })
+        }
         else {
             console.log(user, 'user')
-            user.isInterpreter == true ? res.send({ data: "Interpreter", email: user.email }) : res.send({ data: "Client", email: user.email })
+            res.send({ data: "Interpreter", email: user.email })
         }
     })
 })
 
 router.get("/clientinfo", (req, res) => {
-    User.find({ isInterpreter: false }).then((users) => res.send({ data: users }))
+    Client.find({ isInterpreter: "client" }).then((users) => res.send({ data: users }))
 })
 router.get("/interpreterinfo", (req, res) => {
-    User.find({ isInterpreter: true }).then((users) => res.send({ data: users }))
+    User.find({ isInterpreter: "interpreter" }).then((users) => res.send({ data: users }))
 })
 
 export default router;

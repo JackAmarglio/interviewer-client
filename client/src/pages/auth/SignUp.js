@@ -87,8 +87,16 @@ function SignUp(props) {
             });
             return;
         }
+        // if (!state.g_captcha_response) {
+        //     toast("Please check what your are not robot!", {
+        //         type: "warning",
+        //         progress: undefined
+        //     });
+        //     console.log(recaptchaRef)
+        //     return;
+        // }
         setIsLoading(true);
-        dispatch(Register({ ...state, isInterpreter: true }, (error) => {
+        dispatch(Register({ ...state }, (error) => {
             if (error) {
                 setIsLoading(false);
                 toast(error, {
@@ -106,6 +114,7 @@ function SignUp(props) {
     const handleChange = function (event) {
         const { name, value } = event.target;
         setState({ ...state, [name]: value });
+        console.log(state)
     };
     const onChange = function (value) {
         setState({ ...state, g_captcha_response: value });

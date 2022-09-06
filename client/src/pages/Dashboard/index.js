@@ -82,6 +82,7 @@ const Dashboard = (props) => {
                 },
             })
             .then((res) => {
+                console.log(res.data.data, 'data')
                 setIsClient(res.data.data)
                 setAdminEmail(res.data.email)
             })
@@ -232,7 +233,7 @@ const Dashboard = (props) => {
                 </Box>
             </Box>
             }
-            {isClient === "Client" && adminEmail !== email && <Box>
+            {isClient === "client" && adminEmail !== email && <Box>
                 <HeaderBar />
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>

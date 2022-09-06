@@ -71,10 +71,6 @@ function TablePaginationActions(props) {
   );
 }
 
-function createData(name, calories, fat) {
-  return { name, calories, fat };
-}
-
 export default function InterpreterInfo() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -84,11 +80,13 @@ export default function InterpreterInfo() {
       .get(`${API_URL}/auth/interpreterinfo`)
       .then(res => {
         const data = res.data.data
+        let interpreter = []
         data.map(item => {
           if (item.email != "d.kurtiedu@gmail.com") {
-            setInterpreterData(res.data.data)
+            interpreter.push(item)
           }
         })
+        setInterpreterData(interpreter)
       })
   }, [])
   // Avoid a layout jump when reaching the last page with empty interpreterData.
@@ -110,7 +108,7 @@ export default function InterpreterInfo() {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
         <TableBody>
-          {interpreterData.map(row => (
+          {(rowsPerPage > 0 ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : interpreterData).map(row => (
             <TableRow key={row.name}>
               <TableCell style={{ width: 160 }} align="center">
                 {row._id}

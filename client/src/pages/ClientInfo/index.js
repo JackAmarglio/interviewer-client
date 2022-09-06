@@ -75,6 +75,7 @@ function createData(name, calories, fat) {
   return { name, calories, fat };
 }
 
+
 export default function ClientInfo() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -83,7 +84,14 @@ export default function ClientInfo() {
     axios
       .get(`${API_URL}/auth/clientinfo`)
       .then(res => {
-        setClientData(res.data.data)
+        const data = res.data.data
+        let client = []
+        data.map(item => {
+          if (item.email !== "d.kurtiedu@gmail.com") {
+            client.push(item)
+          }
+        })
+        setClientData(client)
       })
   }, [])
   // Avoid a layout jump when reaching the last page with empty clientData.

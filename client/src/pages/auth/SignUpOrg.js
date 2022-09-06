@@ -18,7 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { connect } from "react-redux";
 import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
-import { Register } from "../../utils/auth";
+import { RegisterAsClient } from "../../utils/auth";
 import { toast } from 'react-toastify';
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { useHistory } from "react-router-dom";
@@ -82,10 +82,11 @@ function SignUpOrg(props) {
                 type: "warning",
                 progress: undefined
             });
+            console.log(recaptchaRef)
             return;
         }
         setIsLoading(true);
-        dispatch(Register({ ...state, isInterpreter: false }, (error) => {
+        dispatch(RegisterAsClient({ ...state }, (error) => {
             if (error) {
                 setIsLoading(false);
                 toast(error, {
@@ -104,6 +105,7 @@ function SignUpOrg(props) {
     const handleChange = function (event) {
         const { name, value } = event.target;
         setState({ ...state, [name]: value });
+        console.log(state)
     };
     const onChange = function (value) {
         setState({ ...state, g_captcha_response: value });
