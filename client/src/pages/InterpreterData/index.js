@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -14,8 +15,9 @@ import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
-import axios from 'axios';
-import { API_URL } from "../../env";
+import axios from "axios"
+import { API_URL } from "../../env"
+import { TextField } from '@mui/material';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -71,10 +73,32 @@ function TablePaginationActions(props) {
   );
 }
 
-export default function InterpreterInfo() {
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+TablePaginationActions.propTypes = {
+  count: PropTypes.number.isRequired,
+  onPageChange: PropTypes.func.isRequired,
+  page: PropTypes.number.isRequired,
+  rowsPerPage: PropTypes.number.isRequired,
+};
+
+
+export default function InterpreterData() {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
   const [interpreterData, setInterpreterData] = useState([])
+  const [searched, setSearched] = useState("");
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   useEffect(() => {
     axios
       .get(`${API_URL}/auth/interpreterinfo`)
@@ -89,71 +113,100 @@ export default function InterpreterInfo() {
         setInterpreterData(interpreter)
       })
   }, [])
-  // Avoid a layout jump when reaching the last page with empty interpreterData.
-  const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
 
-  const handleChangePage = (
-    newPage
-  ) => {
-    setPage(newPage);
+  const requestSearch = (searchedVal) => {
+    setSearched(searchedVal.target.value)
+    const filteredRows = interpreterData.filter((row) => {
+      return row.firstName.includes(searchedVal.target.value) || row.lastName.includes(searchedVal.target.value) || row.phoneNumber !== undefined && row.phoneNumber.includes(searchedVal.target.value) || row._id.includes(searchedVal.target.value) || row.language !== undefined && row.language.includes(searchedVal.target.value) || row.availableTime !== undefined && row.availableTime.includes(searchedVal.target.value);
+    });
+    console.log(filteredRows);
+
+    setInterpreterData(filteredRows);
   };
 
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+  const cancelSearch = () => {
+    setSearched("");
+    requestSearch(searched);
   };
 
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
-        <TableBody>
-          {(rowsPerPage > 0 ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : interpreterData).map(row => (
-            <TableRow key={row.name}>
-              <TableCell style={{ width: 160 }} align="center">
-                {row._id}
-              </TableCell>
-              <TableCell component="th" scope="row">
-                {row.firstName}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="center">
-                {row.lastName}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="center">
-                {row.company}
-              </TableCell>
-              <TableCell style={{ width: 160 }} align="center">
-                {row.phoneNumber}
-              </TableCell>
+    <Box>
+      <TextField
+        value={searched}
+        placeholder="insert text to search any data"
+        onChange={(searchVal) => requestSearch(searchVal)}
+        onCancelSearch={() => cancelSearch()}
+        style={{ minWidth: '500px' }}
+      />
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableBody>
+            {(rowsPerPage > 0
+              ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              : interpreterData
+            ).map((row) => (
+              <TableRow key={row.name}>
+                <TableCell component="th" scope="row">
+                  {row._id}
+                </TableCell>
+                <TableCell component="th" scope="row">
+                  {row.firstName}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.lastName}
+                </TableCell>
+                {row.availableTime == "available" &&
+                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
+                    {row.availableTime}
+                  </TableCell>
+                }
+                {row.availableTime == "notAvailable" &&
+                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
+                    {row.availableTime}
+                  </TableCell>
+                }
+                {row.availableTime == "schedule" &&
+                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
+                    {row.availableTime}
+                  </TableCell>
+                }
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.language}
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center">
+                  {row.phoneNumber}
+                </TableCell>
+              </TableRow>
+            ))}
+
+            {emptyRows > 0 && (
+              <TableRow style={{ height: 53 * emptyRows }}>
+                <TableCell colSpan={6} />
+              </TableRow>
+            )}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                colSpan={3}
+                count={interpreterData.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                SelectProps={{
+                  inputProps: {
+                    'aria-label': 'rows per page',
+                  },
+                  native: true,
+                }}
+                onPageChange={handleChangePage}
+                onRowsPerPageChange={handleChangeRowsPerPage}
+                ActionsComponent={TablePaginationActions}
+              />
             </TableRow>
-          ))}
-          {emptyRows > 0 && (
-            <TableRow style={{ height: 53 * emptyRows }}>
-              <TableCell colSpan={6} />
-            </TableRow>
-          )}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
-              count={interpreterData.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              SelectProps={{
-                inputProps: {
-                  'aria-label': 'interpreterData per page',
-                },
-                native: true,
-              }}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-              ActionsComponent={TablePaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    </Box>
   );
 }

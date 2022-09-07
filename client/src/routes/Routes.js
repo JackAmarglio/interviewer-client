@@ -13,7 +13,7 @@ import { EditProfile } from "../pages/auth/EditProfile"
 import { connect } from "react-redux";
 import SuccessScreen from "../components/SuccessScreen";
 import ClientInfo from "../pages/ClientInfo"
-import InterpreterInfo from "../pages/InterpreterData"
+import InterpreterData from "../pages/InterpreterData"
 
 function Routes(props) {
     const { loggedIn } = props;
@@ -30,7 +30,7 @@ function Routes(props) {
                     <Route exact path="/resetPassword"><ResetPassword /></Route>
                     <Route exact path="/dashboard:id"><Dashboard /></Route>
                     <Route exact path="/clientinfo"><ClientInfo /></Route>
-                    <Route exact path="/interpreterinfo"><InterpreterInfo /></Route>
+                    <Route exact path="/interpreterinfo"><InterpreterData /></Route>
                     <Redirect to={{ pathname: "/" }} />
                 </Switch>
             </Switch>
