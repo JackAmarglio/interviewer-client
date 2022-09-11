@@ -12,6 +12,7 @@ import { toast } from "react-toastify";
 import { alpha, styled } from '@mui/material/styles';
 import { pink } from '@mui/material/colors';
 import { useHistory } from "react-router-dom"
+import countryList from 'react-select-country-list'
 
 const Dashboard = (props) => {
     const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -69,11 +70,15 @@ const Dashboard = (props) => {
         setLang(e.target.value)
     }
     const url = window.location.href
-    console.log(url.lastIndexOf(), 'last index')
     const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
     const [isClient, setIsClient] = useState('')
     const email = "d.kurtiedu@gmail.com"
     const [adminEmail, setAdminEmail] = useState()
+    const [value, setValue] = useState('')
+    const options = useMemo(() => countryList().getData(), [])
+    const changeHandler = value => {
+        setValue(value)
+    }
     useEffect(() => {
         axios
             .get(`${API_URL}/auth/get`, {
@@ -88,11 +93,6 @@ const Dashboard = (props) => {
             })
             .catch((err) => console.log(err))
     }, [])
-    const options = [
-        { label: "English", value: "English" },
-        { label: "Chinese", value: "Chinese" },
-        { label: "", value: "", disabled: true },
-    ];
     const [selected, setSelected] = useState([]);
 
     const saveInterpreterInfo = () => {
@@ -102,6 +102,7 @@ const Dashboard = (props) => {
             experience: year,
             phoneNumber: phoneNumber,
             userId: userId,
+            location: value,
             availableTime: availability
         }
         axios
@@ -120,7 +121,8 @@ const Dashboard = (props) => {
             lastName: lastName,
             phoneNumber: phoneNumber,
             userId: userId,
-            company: company
+            company: company,
+            location: value
         }
         axios
             .post(`${API_URL}/auth/info`, state)
@@ -203,7 +205,7 @@ const Dashboard = (props) => {
                             </Box>
                         </Box>
                         <Box display="flex" marginTop="30px">
-                            <Location />
+                            <Location value={value} options={options} changeHandler={changeHandler} />
                         </Box>
                         <Box display="flex" marginTop="30px">
                             <Typography style={{ marginTop: '5px' }}>Phone number</Typography>
@@ -275,7 +277,7 @@ const Dashboard = (props) => {
                             />
                         </Box>
                         <Box display="flex" marginTop="30px" marginLeft="30px">
-                            <Location />
+                            <Location value={value} options={options} changeHandler={changeHandler} />
                         </Box>
                         <Box display="flex" margin="30px    0px 30px 30px">
                             <Typography style={{ marginTop: '5px' }}>Phone number</Typography>

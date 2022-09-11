@@ -351,7 +351,7 @@ router.post("/resetPassword", (req, res) => {
 });
 
 router.post("/info", (req, res) => {
-    const { language, experience, time, phoneNumber, userId, availableTime, firstName, lastName, company } = req.body;
+    const { language, experience, time, phoneNumber, userId, availableTime, firstName, location, lastName, company } = req.body;
     User.findById(userId, function (err, user) {
         if (!user) {
             Client.findById(userId, function (err, client) {
@@ -359,6 +359,7 @@ router.post("/info", (req, res) => {
                 client.lastName = lastName;
                 client.phoneNumber = phoneNumber
                 client.company = company
+                client.location = location.label;
                 client.save()
                     .then((client) => res.json("client updated"))
                     .catch((error) => console.log(error, 'error'))
@@ -374,6 +375,7 @@ router.post("/info", (req, res) => {
                 user.time = time;
                 user.phoneNumber = phoneNumber;
                 user.availableTime = availableTime;
+                user.location = location.label;
             }
             user
                 .save()
