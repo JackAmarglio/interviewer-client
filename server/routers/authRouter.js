@@ -15,17 +15,13 @@ const router = Router();
 
 // Endpoint for Register
 router.post("/", async (req, res) => {
-    console.log(req.body, '-------')
     const { firstName, lastName, email, password, location, language, experience, availableTime, phoneNumber } = req.body;
-    console.log(email, password, '=======')
     if (!firstName || !lastName || !email || !password) {
-        console.log('true')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
     }
     if (!email || !password) {
-        console.log('false')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
@@ -88,17 +84,13 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/client", async (req, res) => {
-    console.log(req.body, '-------')
     const { firstName, lastName, email, password, location, phoneNumber, company } = req.body;
-    console.log(email, password, '=======')
     if (!email || !password) {
-        console.log('true')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
     }
     if (!email || !password) {
-        console.log('false')
         return res
             .status(404)
             .json({ msg: "Please Provide all necessary fields" });
@@ -390,7 +382,6 @@ router.post("/info", (req, res) => {
 })
 
 router.get("/get", (req, res) => {
-    console.log(req.query, '-----');
     const userId = req.query.userId;
     User.findById(userId, function (err, user) {
         if (!user) {
@@ -402,7 +393,6 @@ router.get("/get", (req, res) => {
             })
         }
         else {
-            console.log(user, 'user')
             res.send({ data: "Interpreter", email: user.email })
         }
     })
