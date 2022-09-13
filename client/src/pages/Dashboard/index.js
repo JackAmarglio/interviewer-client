@@ -28,7 +28,6 @@ const Dashboard = (props) => {
     }));
     const [year, setYear] = React.useState('');
     const [lang, setLang] = React.useState('');
-    const [time, setTime] = React.useState('');
     const [firstName, setFirstName] = useState('')
     const [lastName, setLastName] = useState('')
     const [phoneNumber, setPhoneNumber] = useState()
@@ -66,9 +65,7 @@ const Dashboard = (props) => {
         }
         setAvailability("schedule")
     };
-    const handleChangeLang = (e) => {
-        setLang(e.target.value)
-    }
+
     const url = window.location.href
     const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
     const [isClient, setIsClient] = useState('')
@@ -87,13 +84,11 @@ const Dashboard = (props) => {
                 },
             })
             .then((res) => {
-                console.log(res.data.data, 'data')
                 setIsClient(res.data.data)
                 setAdminEmail(res.data.email)
             })
             .catch((err) => console.log(err))
     }, [])
-    const [selected, setSelected] = useState([]);
 
     const saveInterpreterInfo = () => {
 
