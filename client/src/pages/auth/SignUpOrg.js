@@ -1,7 +1,3 @@
-/*
-additional data:  about, address, website, contact
-*/
-
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -20,7 +16,6 @@ import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { RegisterAsClient } from "../../utils/auth";
 import { toast } from 'react-toastify';
-// import LoadingIndicator from "../../components/LoadingIndicator";
 import { useHistory } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { SITE_KEY } from '../../env';
@@ -116,7 +111,6 @@ function SignUpOrg(props) {
 
     return (
         <ThemeProvider theme={theme}>
-            {/* {isLoading && <LoadingIndicator />} */}
             <Box sx={{ flexGrow: 1, overflowX: "hidden" }} margin="1% 3%">
                 <HeaderBar />
                 <Container component="main" maxWidth="xs">
