@@ -14,16 +14,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { HeaderBar } from "../layout/HeaderBar";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { LogIn } from "../../utils/auth";
 import { useHistory } from "react-router-dom";
-import { forgotPas } from "./ForgotPassword";
-import { toast } from 'react-toastify';
 import { API_URL } from "../../env";
 import axios from "axios";
 const theme = createTheme();
 
 function SignIn(props) {
-    const { dispatch } = props;
     const history = useHistory();
     const [state, setState] = useState({
         password: "",
