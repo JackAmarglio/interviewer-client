@@ -13,13 +13,12 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { connect } from "react-redux";
-import { createRef, useEffect, useState } from "react";
+import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { Register } from "../../utils/auth";
 import { useHistory } from "react-router-dom";
 import * as isEmail from "is-email";
 import { toast } from 'react-toastify';
-// import LoadingIndicator from "../../components/LoadingIndicator";
 import ReCAPTCHA from "react-google-recaptcha";
 import { SITE_KEY } from '../../env';
 const theme = createTheme();
@@ -87,14 +86,6 @@ function SignUp(props) {
             });
             return;
         }
-        // if (!state.g_captcha_response) {
-        //     toast("Please check what your are not robot!", {
-        //         type: "warning",
-        //         progress: undefined
-        //     });
-        //     console.log(recaptchaRef)
-        //     return;
-        // }
         setIsLoading(true);
         dispatch(Register({ ...state }, (error) => {
             if (error) {
