@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useMemo, useReducer } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import { API_URL } from "../../env";
-import { getUserInfo } from "../../utils/auth";
 import Box from "@mui/material/Box";
 import { Typography, Grid, MenuItem, TextField, Select, Button, Switch } from "@mui/material";
 import Location from "./Location"
@@ -14,7 +13,7 @@ import { pink } from '@mui/material/colors';
 import { useHistory } from "react-router-dom"
 import countryList from 'react-select-country-list'
 
-const Dashboard = (props) => {
+const Dashboard = () => {
     const GreenSwitch = styled(Switch)(({ theme }) => ({
         '& .MuiSwitch-switchBase.Mui-checked': {
             color: pink[600],
