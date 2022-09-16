@@ -15,7 +15,7 @@ function LandingPage() {
         }, 3000);
     }, []);
     return (
-        <Box sx={{ flexGrow: 1, overflowX: "hidden" }} margin="2% 5%">
+        <Box sx={{ flexGrow: 1, overflowX: "hidden" }}>
             {!anim &&
                 <Box className="animate__animated animate__flipInY animate__delay-1s animate__zoomOutRight">
                     <img src="logo.png" alt="" />
