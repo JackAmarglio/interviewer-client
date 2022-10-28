@@ -119,7 +119,6 @@ export default function InterpreterData() {
     const filteredRows = interpreterData.filter((row) => {
       return row.firstName.includes(searchedVal.target.value) || row.lastName.includes(searchedVal.target.value) || row.phoneNumber !== undefined && row.phoneNumber.includes(searchedVal.target.value) || row._id.includes(searchedVal.target.value) || row.language !== undefined && row.language.includes(searchedVal.target.value) || row.availableTime !== undefined && row.availableTime.includes(searchedVal.target.value);
     });
-    console.log(filteredRows);
 
     setInterpreterData(filteredRows);
   };
