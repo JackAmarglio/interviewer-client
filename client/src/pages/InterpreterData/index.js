@@ -17,7 +17,8 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import axios from "axios"
 import { API_URL } from "../../env"
-import { TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
+import { toast } from "react-toastify";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -86,6 +87,7 @@ export default function InterpreterData() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [interpreterData, setInterpreterData] = useState([])
   const [searched, setSearched] = useState("");
+  const [time, setTime] = useState([]);
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
@@ -99,6 +101,8 @@ export default function InterpreterData() {
     setPage(0);
   };
 
+  const firstState = []
+
   useEffect(() => {
     axios
       .get(`${API_URL}/auth/interpreterinfo`)
@@ -110,18 +114,19 @@ export default function InterpreterData() {
             interpreter.push(item)
           }
         })
-        setInterpreterData(interpreter)
+        setInterpreterData(interpreter.map(item => ({ ...item, updated: false })))
+        firstState = interpreterData
       })
   }, [])
 
   const requestSearch = (searchedVal) => {
     setSearched(searchedVal.target.value)
-    const filteredRows = interpreterData.filter((row) => {
-      return row.firstName.includes(searchedVal.target.value) || row.lastName.includes(searchedVal.target.value) || row.phoneNumber !== undefined && row.phoneNumber.includes(searchedVal.target.value) || row._id.includes(searchedVal.target.value) || row.language !== undefined && row.language.includes(searchedVal.target.value) || row.availableTime !== undefined && row.availableTime.includes(searchedVal.target.value);
+    setInterpreterData(_prev => {
+      const filteredRows = _prev.filter((row) => {
+        return row.firstName.includes(searchedVal.target.value) || row.lastName.includes(searchedVal.target.value) || row.phoneNumber !== undefined && row.phoneNumber.includes(searchedVal.target.value) || row._id.includes(searchedVal.target.value) || row.language !== undefined && row.language.includes(searchedVal.target.value) || row.availableTime !== undefined && row.availableTime.includes(searchedVal.target.value);
+      });
+      return filteredRows;
     });
-    console.log(filteredRows);
-
-    setInterpreterData(filteredRows);
   };
 
   const cancelSearch = () => {
@@ -129,22 +134,47 @@ export default function InterpreterData() {
     requestSearch(searched);
   };
 
+  const updateTime = (e, id) => {
+    setInterpreterData(_prev => {
+      const _result = [..._prev]
+      const index = _result.findIndex(_val => _val._id === id);
+      if (index >= 0) {
+        _result[index].time = e.target.value;
+        _result[index].updated = true;
+      }
+      return _result;
+    })
+  }
+
+  const saveData = () => {
+    const updatedState = interpreterData.filter(_row => _row.updated)
+    axios
+    .post(`${API_URL}/auth/save`, updatedState)
+    .then((res) => {
+        toast("Successfully updated", {
+            type: "success"
+        });
+    })
+  }
   return (
     <Box>
-      <TextField
-        value={searched}
-        placeholder="insert text to search any data"
-        onChange={(searchVal) => requestSearch(searchVal)}
-        onCancelSearch={() => cancelSearch()}
-        style={{ minWidth: '500px' }}
-      />
+      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <TextField
+          value={searched}
+          placeholder="insert text to search any data"
+          onChange={(searchVal) => requestSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+          style={{ minWidth: '500px' }}
+        />
+        <Button onClick={() => saveData()}>Save</Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableBody>
             {(rowsPerPage > 0
               ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : interpreterData
-            ).map((row) => (
+            ).map((row, index) => (
               <TableRow key={row.name}>
                 <TableCell component="th" scope="row">
                   {row._id}
@@ -175,6 +205,9 @@ export default function InterpreterData() {
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="center">
                   {row.phoneNumber}
+                </TableCell>
+                <TableCell>
+                  <input value={row.time} onChange={(e) => updateTime(e, row._id)} />
                 </TableCell>
               </TableRow>
             ))}

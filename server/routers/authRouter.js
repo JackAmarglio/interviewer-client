@@ -16,6 +16,7 @@ const router = Router();
 // Endpoint for Register
 router.post("/", async (req, res) => {
     const { firstName, lastName, email, password, location, language, experience, availableTime, phoneNumber } = req.body;
+    const time = 0
     if (!firstName || !lastName || !email || !password) {
         return res
             .status(404)
@@ -45,7 +46,8 @@ router.post("/", async (req, res) => {
         language,
         phoneNumber,
         availableTime,
-        isInterpreter
+        isInterpreter,
+        time
     });
 
     const savedUser = await newUser.save();
@@ -393,7 +395,7 @@ router.get("/get", (req, res) => {
             })
         }
         else {
-            res.send({ data: "Interpreter", email: user.email })
+            res.send({ data: "Interpreter", email: user.email, time: user.time })
         }
     })
 })
@@ -405,4 +407,23 @@ router.get("/interpreterinfo", (req, res) => {
     User.find({ isInterpreter: "interpreter" }).then((users) => res.send({ data: users }))
 })
 
+router.post("/save", (req, res) => {
+    const updatedState = req.body;
+    console.log(updatedState, 'update')
+    for (var k in updatedState) {
+        console.log('compare', k)
+        User.findById(updatedState[k]._id, function(err, user) {
+            user.time = updatedState[k].time
+            user
+            .save()
+            .then((user) => {
+                res.json("updated successfully!")
+            })
+            .catch((err) => {
+                res.status(400).send("Update not possible");
+            })
+        })
+        
+    }
+})
 export default router;

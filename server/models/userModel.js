@@ -11,7 +11,8 @@ const userSchema = mongoose.Schema({
     experience: { type: String, required: false },
     language: { type: String, required: false },
     availableTime: { type: String, required: false },
-    company: { type: String, required: false }
+    company: { type: String, required: false },
+    time: {type: String, required: false}
 });
 
 export const User = mongoose.model("reactUser", userSchema);

@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import { VerifyEmail as verifyEmail } from "../../utils/auth";
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { toast } from 'react-toastify';
+import { Typography } from "@mui/material";
 const theme = createTheme();
 function VerifyEmail(props) {
     const { dispatch } = props;
@@ -57,8 +58,8 @@ function VerifyEmail(props) {
                         }}
                     >
 
-                        {!verified && !hasError && (<p>Verifying ...</p>)}
-                        {!verified && hasError && (<p className="text-red">Oops! Email Verification Failed!</p>)}
+                        {!verified && !hasError && (<Typography>Verifying ...</Typography>)}
+                        {!verified && hasError && (<Typography className="text-red">Oops! Email Verification Failed!</Typography>)}
                         {verified && (<div>Verification Successed. <a href="/dashboard">Go to dashboard</a></div>)}
                     </Box>
                 </Container>
