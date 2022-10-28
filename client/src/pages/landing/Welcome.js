@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Grid, Typography, Box, styled, Button } from "@mui/material";
 import LandingLogo from "../../Images/mobileGuy.svg";
 import ScrollAnimation from 'react-animate-on-scroll';
@@ -13,25 +13,27 @@ const Welcome = () => {
       textAlign: "left"
     }
   }));
-
   return (
     <Box style={{ background: "black", padding: '20px' }}>
       <Box sx={{ flexGrow: 1, overflowX: "hidden" }}>
         <Grid container spacing={4}>
           <Box display="flex">
             <video width="300" height="200" autoPlay muted loop style={{ marginTop: '50px', marginLeft: '30px' }}>
-              <source src="/1.webm" type="video/webm" id="logo_video"/>
+              <source src="/1.webm" type="video/webm"/>
             </video>
             <ScrollAnimation animateOnce={false} animateIn="animate__animated animate__fadeInLeft">
               <img src="logo.png" alt="" width="400px" style={{ marginTop: "40px" }} />
             </ScrollAnimation>
             <ScrollAnimation animateOnce={false} animateIn="animate__animated animate__fadeInRight">
               <Typography marginTop="30px" marginLeft="30px" color="white">
-                <Typography color="white" fontSize="25px" paddingTop="30px" fontStyle="bold">Neon-Languages LLC</Typography>
-                <br />
+                <Typography color="white" fontSize="25px" paddingTop="30px" fontStyle="bold">Neon-Languages LLC</Typography><br />
+
                 A company built  based on the needs of the costumer. Neon-L brings a new era, a place of innovative experience, with the ability to make choices that matter. With the efficiency and the collaboration of our team you have the ability to create a fast paced telephonic interpretation session for you.
+
                 Our company has worked hard to create a conclusive system that gives the right to our costumers to become our clients or use our services without commitment.
+
                 We serve clients and guests similarly, with the need to create a faster and more advanced system of communication.
+
                 Neon-L was founded in Connecticut, USA, and its looking to rise above the limitations of other traditional language service companies, giving the flexibility to place an OPI call on your own time and based on your needs.
                 </Typography>
             </ScrollAnimation>

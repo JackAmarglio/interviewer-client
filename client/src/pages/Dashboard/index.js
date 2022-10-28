@@ -72,7 +72,6 @@ const Dashboard = () => {
     const [adminEmail, setAdminEmail] = useState()
     const [value, setValue] = useState('')
     const options = useMemo(() => countryList().getData(), [])
-    const [time, setTime] = useState('')
     const changeHandler = value => {
         setValue(value)
     }
@@ -86,7 +85,6 @@ const Dashboard = () => {
             .then((res) => {
                 setIsClient(res.data.data)
                 setAdminEmail(res.data.email)
-                setTime(res.data.time)
             })
             .catch((err) => console.log(err))
     }, [])
@@ -218,13 +216,6 @@ const Dashboard = () => {
                                 style={{ paddingLeft: '5px' }}
                             />
                         </Box>
-                        <Box display="flex" margin="30px    0px 30px 30px">
-                            <Typography style={{ marginTop: '5px' }}>Work Time</Typography>
-                            <TextField
-                                value={time}
-                                style={{ marginLeft: '55px', width: '200px', height: '30px' }}
-                            />
-                        </Box>
                         <Grid
                             container
                             spacing={0}
@@ -297,7 +288,6 @@ const Dashboard = () => {
                                 style={{ paddingLeft: '5px' }}
                             />
                         </Box>
-                        
                         <Grid
                             container
                             spacing={0}
