@@ -393,7 +393,7 @@ router.get("/get", (req, res) => {
             })
         }
         else {
-            res.send({ data: "Interpreter", email: user.email })
+            res.send({ data: "Interpreter", email: user.email, time: user.time })
         }
     })
 })
@@ -403,6 +403,30 @@ router.get("/clientinfo", (req, res) => {
 })
 router.get("/interpreterinfo", (req, res) => {
     User.find({ isInterpreter: "interpreter" }).then((users) => res.send({ data: users }))
+})
+
+router.post("/save", (req, res) => {
+    const updatedState = req.body.updatedState
+    const year = req.body.year;
+    const month = req.body.month;
+    const date = req.body.date;
+    for (var k in updatedState) {
+        User.findById(updatedState[k]._id, function(err, user) {
+            user.date.worktime = updatedState[k].time
+            user.date.year = year
+            user.date.day = date
+            user.date.month = month
+            user
+            .save()
+            .then((user) => {
+                res.send({data: 'success'})
+            })
+            .catch((err) => {
+                res.status(400).send("Update not possible");
+            })
+        })
+        
+    }
 })
 
 export default router;

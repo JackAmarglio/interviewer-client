@@ -17,7 +17,10 @@ import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import LastPageIcon from '@mui/icons-material/LastPage';
 import axios from "axios"
 import { API_URL } from "../../env"
-import { TextField } from '@mui/material';
+import { TextField, Button } from '@mui/material';
+import { toast } from "react-toastify";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -128,15 +131,49 @@ export default function InterpreterData() {
     requestSearch(searched);
   };
 
+  const updateTime = (e, id) => {
+    setInterpreterData(_prev => {
+      const _result = [..._prev]
+      const index = _result.findIndex(_val => _val._id === id);
+      if (index >= 0) {
+        _result[index].time = e.target.value;
+        _result[index].updated = true;
+      }
+      return _result;
+    })
+  }
+
+  const saveData = () => {
+    const updatedState = interpreterData.filter(_row => _row.updated)
+    let year = startDate.getFullYear();
+    let month = startDate.getMonth() + 1;
+    let date = startDate.getDate();
+    let update = {
+      updatedState, year, month, date
+    }
+    axios
+      .post(`${API_URL}/auth/save`, update)
+      .then((res) => {
+        if (res.data.data == 'success') {
+          alert("Successfully saved")
+        }
+      })
+  }
+  const [startDate, setStartDate] = useState(new Date());
+
   return (
     <Box>
-      <TextField
-        value={searched}
-        placeholder="insert text to search any data"
-        onChange={(searchVal) => requestSearch(searchVal)}
-        onCancelSearch={() => cancelSearch()}
-        style={{ minWidth: '500px' }}
-      />
+      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <TextField
+          value={searched}
+          placeholder="insert text to search any data"
+          onChange={(searchVal) => requestSearch(searchVal)}
+          onCancelSearch={() => cancelSearch()}
+          style={{ minWidth: '500px' }}
+        />
+        <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+        <Button onClick={() => saveData()}>Save</Button>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
           <TableBody>
@@ -174,6 +211,9 @@ export default function InterpreterData() {
                 </TableCell>
                 <TableCell style={{ width: 160 }} align="center">
                   {row.phoneNumber}
+                </TableCell>
+                <TableCell>
+                  <input value={row.time} onChange={(e) => updateTime(e, row._id)} />
                 </TableCell>
               </TableRow>
             ))}

@@ -12,6 +12,8 @@ import { alpha, styled } from '@mui/material/styles';
 import { pink } from '@mui/material/colors';
 import { useHistory } from "react-router-dom"
 import countryList from 'react-select-country-list'
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 const Dashboard = () => {
     const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -72,6 +74,9 @@ const Dashboard = () => {
     const [adminEmail, setAdminEmail] = useState()
     const [value, setValue] = useState('')
     const options = useMemo(() => countryList().getData(), [])
+    const [time, setTime] = useState('')
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
     const changeHandler = value => {
         setValue(value)
     }
@@ -85,6 +90,7 @@ const Dashboard = () => {
             .then((res) => {
                 setIsClient(res.data.data)
                 setAdminEmail(res.data.email)
+                setTime(res.data.time)
             })
             .catch((err) => console.log(err))
     }, [])
@@ -133,14 +139,20 @@ const Dashboard = () => {
                 <Button onClick={() => history.push("./clientinfo")}>Client Data</Button>
                 <Button onClick={() => history.push("./interpreterinfo")}>Interpreter Data</Button>
             </Box>}
+            
             {isClient === "Interpreter" && adminEmail !== email && <Box>
                 <HeaderBar />
+                <Box display="flex">
+                    <DatePicker className="form-control1" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+                    <DatePicker className="form-control2" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
+                </Box>
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>
                         <ScrollAnimation animateOnce={true} animateIn="animate__animated animate__fadeInRight">
                             <img src="logo.png" width="100%" height="350px" alt="logoImage" />
                         </ScrollAnimation>
                     </Grid>
+                    
                     <Grid item xs={6} container
                         spacing={0}
                         direction="column"
@@ -214,6 +226,13 @@ const Dashboard = () => {
                                 mask="(999) 999-9999"
                                 className="phone_number"
                                 style={{ paddingLeft: '5px' }}
+                            />
+                        </Box>
+                        <Box display="flex" margin="30px 0px 30px 30px">
+                            <Typography style={{ marginTop: '5px' }}>Work Time</Typography>
+                            <TextField
+                                value={time}
+                                style={{ marginLeft: '55px', width: '200px', height: '30px' }}
                             />
                         </Box>
                         <Grid

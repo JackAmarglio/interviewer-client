@@ -21,3 +21,22 @@
     border-radius: 15px;
     height: 40px;
 }
+.form-control {
+    padding: 4px 10px !important;
+    height: 38px !important;
+    margin-left: 30px;
+}
+
+.form-control1 {
+    padding: 4px 10px !important;
+    height: 38px !important;
+    margin-left: 30px;
+    margin-top: 50px;
+}
+
+.form-control2 {
+    padding: 4px 10px !important;
+    height: 38px !important;
+    margin-left: 30px;
+    margin-top: 50px;
+}
