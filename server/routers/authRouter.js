@@ -414,6 +414,14 @@ router.post("/save", async(req, res) => {
     const month = req.body.month;
     const date = req.body.date;
     for (var k in updatedState) {
+        User.findById(updatedState[k]._id, function(err, user) {
+            user.date.map((item, index) => {
+                console.log(item, 'item')
+                if (item.day) {
+                    
+                }
+            })
+        })
         const query = {_id : updatedState[k]._id }
         await User.updateOne(query, {$push: {
             date: 
