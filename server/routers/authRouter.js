@@ -1,6 +1,7 @@
 import Router from "express";
 import { User } from "../models/userModel.js";
 import { Client } from "../models/clientModel.js"
+import { WorkTime } from "../models/worktimeModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
@@ -49,6 +50,8 @@ router.post("/", async (req, res) => {
     });
 
     const savedUser = await newUser.save();
+    console.log(savedUser);
+    const userId = savedUser._id;
     res.send({ user: savedUser })
 
     // const token = jwt.sign(
@@ -393,7 +396,7 @@ router.get("/get", (req, res) => {
             })
         }
         else {
-            res.send({ data: "Interpreter", email: user.email, time: user.time })
+            res.send({ data: "Interpreter", email: user.email })
         }
     })
 })
@@ -405,27 +408,23 @@ router.get("/interpreterinfo", (req, res) => {
     User.find({ isInterpreter: "interpreter" }).then((users) => res.send({ data: users }))
 })
 
-router.post("/save", (req, res) => {
+router.post("/save", async(req, res) => {
     const updatedState = req.body.updatedState
     const year = req.body.year;
     const month = req.body.month;
     const date = req.body.date;
     for (var k in updatedState) {
-        User.findById(updatedState[k]._id, function(err, user) {
-            user.date.worktime = updatedState[k].time
-            user.date.year = year
-            user.date.day = date
-            user.date.month = month
-            user
-            .save()
-            .then((user) => {
-                res.send({data: 'success'})
-            })
-            .catch((err) => {
-                res.status(400).send("Update not possible");
-            })
+        const query = {_id : updatedState[k]._id }
+        await User.updateOne(query, {$push: {
+            date: 
+                {
+                    year, // year: year
+                    month, // month: month
+                    day: date,
+                    worktime: updatedState[k].time
+                }
+            }   
         })
-        
     }
 })
 

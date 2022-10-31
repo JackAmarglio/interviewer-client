@@ -104,8 +104,9 @@ export default function InterpreterData() {
 
   useEffect(() => {
     axios
-      .get(`${API_URL}/auth/interpreterinfo`)
+      .get(`${API_URL}/auth/interpreterinfo`, startDate)
       .then(res => {
+        console.log(res, 'res')
         const data = res.data.data
         let interpreter = []
         data.map(item => {

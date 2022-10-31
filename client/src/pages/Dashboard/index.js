@@ -93,6 +93,12 @@ const Dashboard = () => {
                 setTime(res.data.time)
             })
             .catch((err) => console.log(err))
+        // axios 
+        //     .get(`${API_URL}/auth/worktime`, {
+        //         params: {
+        //             userId: userId,
+        //         }
+        //     })
     }, [])
 
     const saveInterpreterInfo = () => {

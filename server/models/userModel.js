@@ -12,7 +12,7 @@ const userSchema = mongoose.Schema({
     language: { type: String, required: false },
     availableTime: { type: String, required: false },
     company: { type: String, required: false },
-    date: {
+    date: [{
         year: {
             type: Number
         },
@@ -25,7 +25,7 @@ const userSchema = mongoose.Schema({
         worktime: {
             type: Number
         }
-    }
+    }]
 });
 
 export const User = mongoose.model("reactUser", userSchema);
