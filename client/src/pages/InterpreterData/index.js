@@ -89,6 +89,8 @@ export default function InterpreterData() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [interpreterData, setInterpreterData] = useState([])
   const [searched, setSearched] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
@@ -102,21 +104,38 @@ export default function InterpreterData() {
     setPage(0);
   };
 
-  useEffect(() => {
+  const getContent = () => {
+    let date = startDate.getDate()
+    let month = startDate.getMonth() + 1
+    let year = startDate.getFullYear()
     axios
-      .get(`${API_URL}/auth/interpreterinfo`, startDate)
+      .get(`${API_URL}/auth/interpreterinfo`, { params: {
+        day: date,
+        month: month,
+        year: year
+      }
+    })
       .then(res => {
-        console.log(res, 'res')
         const data = res.data.data
         let interpreter = []
         data.map(item => {
           if (item.email != "d.kurtiedu@gmail.com") {
-            interpreter.push(item)
+            if (item.date) {
+              const _date = item.date.find(work => work.year == year && work.month == month && work.day == date)
+              const newItem = {...item, date: _date}  
+              interpreter.push(newItem)
+            } else {
+              interpreter.push(item)
+            }
           }
         })
         setInterpreterData(interpreter)
       })
-  }, [])
+  }
+
+  useEffect(() => {
+    getContent();
+  }, [startDate])
 
   const requestSearch = (searchedVal) => {
     setSearched(searchedVal.target.value)
@@ -137,7 +156,12 @@ export default function InterpreterData() {
       const _result = [..._prev]
       const index = _result.findIndex(_val => _val._id === id);
       if (index >= 0) {
-        _result[index].time = e.target.value;
+        if(_result[index].date != undefined) {
+          _result[index].date.worktime = e.target.value
+        }
+        else {
+          _result[index].date = {"worktime": e.target.value, "year": startDate.getFullYear(), 'month': startDate.getMonth() + 1, 'day': startDate.getDate()}
+        }
         _result[index].updated = true;
       }
       return _result;
@@ -160,7 +184,6 @@ export default function InterpreterData() {
         }
       })
   }
-  const [startDate, setStartDate] = useState(new Date());
 
   return (
     <Box>
@@ -172,7 +195,7 @@ export default function InterpreterData() {
           onCancelSearch={() => cancelSearch()}
           style={{ minWidth: '500px' }}
         />
-        <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+        <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => { setStartDate(date);}} />
         <Button onClick={() => saveData()}>Save</Button>
       </Box>
       <TableContainer component={Paper}>
@@ -214,7 +237,7 @@ export default function InterpreterData() {
                   {row.phoneNumber}
                 </TableCell>
                 <TableCell>
-                  <input value={row.time} onChange={(e) => updateTime(e, row._id)} />
+                  <input value={row.date ? row.date.worktime : 0} onChange={(e) => updateTime(e, row._id)} />
                 </TableCell>
               </TableRow>
             ))}

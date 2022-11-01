@@ -144,7 +144,7 @@ export default function InterpreterData() {
             {(rowsPerPage > 0
               ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : interpreterData
-            ).map((row) => (
+            ).map((row, index) => (
               <TableRow key={row.name}>
                 <TableCell component="th" scope="row">
                   {row._id}

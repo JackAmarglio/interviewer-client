@@ -404,7 +404,7 @@ router.get("/get", (req, res) => {
 router.get("/clientinfo", (req, res) => {
     Client.find({ isInterpreter: "client" }).then((users) => res.send({ data: users }))
 })
-router.get("/interpreterinfo", (req, res) => {
+router.get("/interpreterinfo", async (req, res) => {
     User.find({ isInterpreter: "interpreter" }).then((users) => res.send({ data: users }))
 })
 
@@ -414,26 +414,28 @@ router.post("/save", async(req, res) => {
     const month = req.body.month;
     const date = req.body.date;
     for (var k in updatedState) {
-        User.findById(updatedState[k]._id, function(err, user) {
-            user.date.map((item, index) => {
-                console.log(item, 'item')
-                if (item.day) {
-                    
-                }
-            })
-        })
-        const query = {_id : updatedState[k]._id }
-        await User.updateOne(query, {$push: {
-            date: 
-                {
-                    year, // year: year
-                    month, // month: month
-                    day: date,
-                    worktime: updatedState[k].time
-                }
-            }   
+        User.findById(updatedState[k]._id, async function(err, user) {
+
+            const dateExist = user.date.find((item) => item.year == year && item.month == month && item.day == date)
+            if (dateExist) {
+                dateExist.worktime = updatedState[k].date.worktime
+                await user.save()
+            } else {
+                const query = {_id : updatedState[k]._id }
+                await User.updateOne(query, {$push: {
+                    date: 
+                        {
+                            year, // year: year
+                            month, // month: month
+                            day: date,
+                            worktime: updatedState[k].date.worktime
+                        }
+                    }   
+                })
+            }
         })
     }
+    res.send({data: 'success'})
 })
 
 export default router;
