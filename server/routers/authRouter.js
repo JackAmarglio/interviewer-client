@@ -386,6 +386,12 @@ router.post("/info", (req, res) => {
 
 router.get("/get", (req, res) => {
     const userId = req.query.userId;
+    const day1 = req.query.day1;
+    const month1 = req.query.month1;
+    const year1 = req.query.year1;
+    const day2 = req.query.day2;
+    const month2 = req.query.month2;
+    const year2 = req.query.year2;
     User.findById(userId, function (err, user) {
         if (!user) {
             Client.findById(userId, function (err, client) {
@@ -396,7 +402,7 @@ router.get("/get", (req, res) => {
             })
         }
         else {
-            res.send({ data: "Interpreter", email: user.email })
+            res.send({ data: "Interpreter", email: user.email, user: user })
         }
     })
 })

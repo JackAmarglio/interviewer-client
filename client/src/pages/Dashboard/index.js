@@ -38,6 +38,22 @@ const Dashboard = () => {
     const [schedule, setSchedule] = useState(false)
     const [availability, setAvailability] = useState()
     const history = useHistory()
+    const url = window.location.href
+    const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
+    const [isClient, setIsClient] = useState('')
+    const email = "d.kurtiedu@gmail.com"
+    const [adminEmail, setAdminEmail] = useState()
+    const [value, setValue] = useState('')
+    const options = useMemo(() => countryList().getData(), [])
+    const [time, setTime] = useState('')
+    const [startDate, setStartDate] = useState(new Date());
+    const [endDate, setEndDate] = useState(new Date());
+    const year1 = startDate.getFullYear()
+    const month1 = startDate.getMonth() + 1
+    const day1 = startDate.getDate()
+    const year2 = endDate.getFullYear()
+    const month2 = endDate.getMonth() + 1
+    const day2 = endDate.getDate()
 
     const handleChangeExperience = (event) => {
         setYear(event.target.value);
@@ -67,16 +83,7 @@ const Dashboard = () => {
         setAvailability("schedule")
     };
 
-    const url = window.location.href
-    const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
-    const [isClient, setIsClient] = useState('')
-    const email = "d.kurtiedu@gmail.com"
-    const [adminEmail, setAdminEmail] = useState()
-    const [value, setValue] = useState('')
-    const options = useMemo(() => countryList().getData(), [])
-    const [time, setTime] = useState('')
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    
     const changeHandler = value => {
         setValue(value)
     }
@@ -84,22 +91,30 @@ const Dashboard = () => {
         axios
             .get(`${API_URL}/auth/get`, {
                 params: {
-                    userId: userId
+                    userId: userId,
                 },
             })
             .then((res) => {
+                console.log(res.data.user, 'user')
                 setIsClient(res.data.data)
                 setAdminEmail(res.data.email)
                 setTime(res.data.time)
+                const total_time = res.data.user
+                let b = 0
+                total_time.date.map((item, index) => {
+                    const a1 = new Date(item.year, item.month - 1 , item.day);
+                    const a2 = new Date(year1, month1 - 1, day1);
+                    const a3 = new Date(year2, month2 - 1, day2);
+                    if (a1 >= a2 && a1 <= a3) {
+                        console.log(a1, a2, a3, item, '==')
+                        b += item.worktime
+                    }
+
+                })
+                setTime(b)
             })
             .catch((err) => console.log(err))
-        // axios 
-        //     .get(`${API_URL}/auth/worktime`, {
-        //         params: {
-        //             userId: userId,
-        //         }
-        //     })
-    }, [])
+    }, [startDate, endDate])
 
     const saveInterpreterInfo = () => {
 
