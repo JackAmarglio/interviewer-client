@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { ResetPassword as resetPassword } from "../../utils/auth";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import LoadingIndicator from "../../components/LoadingIndicator";
 
 import { toast } from 'react-toastify';
@@ -22,7 +22,7 @@ import jwtDecode from "jwt-decode";
 const theme = createTheme();
 function ResetPassword(props) {
     const { loggedIn, dispatch } = props;
-    const history = useHistory();
+    const history = useNavigate();
     const [state, setState] = useState({
         newpassword: "",
         confirmpassword: "",
@@ -54,7 +54,7 @@ function ResetPassword(props) {
                 toast("Successfully password reset", {
                     type: "success"
                 });
-                history.push("/dashboard");
+                history("/dashboard");
                 return;
             } else {
                 toast(message, {

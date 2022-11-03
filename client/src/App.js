@@ -1,4 +1,4 @@
-import { Routes } from "./routes/Routes";
+import { RoutesData } from "./routes";
 
 import axios from "axios";
 import { ToastContainer } from 'react-toastify';
@@ -9,7 +9,7 @@ axios.defaults.withCredentials = true;
 function App() {
     return (
         <div className="App">
-            <Routes />
+            <RoutesData />
             <ToastContainer />
         </div>
     );

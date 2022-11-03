@@ -10,7 +10,7 @@ import { HeaderBar } from "../layout/HeaderBar";
 import { toast } from "react-toastify";
 import { alpha, styled } from '@mui/material/styles';
 import { pink } from '@mui/material/colors';
-import { useHistory } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import countryList from 'react-select-country-list'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -37,9 +37,9 @@ const Dashboard = () => {
     const [notavailable, setNotAvailable] = useState(false)
     const [schedule, setSchedule] = useState(false)
     const [availability, setAvailability] = useState()
-    const history = useHistory()
+    const history = useNavigate()
     const url = window.location.href
-    const userId = url.substring(url.indexOf("dashboard") + 10, url.length);
+    const userId = url.substring(url.indexOf("dashboard") + 11, url.length);
     const [isClient, setIsClient] = useState('')
     const email = "d.kurtiedu@gmail.com"
     const [adminEmail, setAdminEmail] = useState()
@@ -106,10 +106,8 @@ const Dashboard = () => {
                     const a2 = new Date(year1, month1 - 1, day1);
                     const a3 = new Date(year2, month2 - 1, day2);
                     if (a1 >= a2 && a1 <= a3) {
-                        console.log(a1, a2, a3, item, '==')
                         b += item.worktime
                     }
-
                 })
                 setTime(b)
             })
@@ -157,8 +155,8 @@ const Dashboard = () => {
     return (
         <>
             {adminEmail === email && <Box left="45%" display="flex" position="absolute" top="30%" flexDirection="column">
-                <Button onClick={() => history.push("./clientinfo")}>Client Data</Button>
-                <Button onClick={() => history.push("./interpreterinfo")}>Interpreter Data</Button>
+                <Button onClick={() => history("/clientinfo")}>Client Data</Button>
+                <Button onClick={() => history("/interpreterinfo")}>Interpreter Data</Button>
             </Box>}
             
             {isClient === "Interpreter" && adminEmail !== email && <Box>

@@ -10,14 +10,14 @@ import { connect } from "react-redux";
 import { LogIn, Register, SendVerifyEmail } from "../../utils/auth";
 import { toast } from 'react-toastify';
 // import LoadingIndicator from "../../components/LoadingIndicator";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const theme = createTheme();
 
 function VerifyStatus(props) {
     const { dispatch } = props;
     const [isLoading, setIsLoading] = useState(false);
     const [isEmailSent, setIsEmailSent] = useState(false);
-    const history = useHistory();
+    const history = useNavigate();
     const sendVerifyEmail = function (event) {
         setIsLoading(true);
         dispatch(SendVerifyEmail((status, message) => {
@@ -26,7 +26,7 @@ function VerifyStatus(props) {
                 // toast("Already You verified email!",{                    
                 //     type: "success"                    
                 // });
-                history.push('/SuccessScreen');
+                history('/SuccessScreen');
                 window.location.reload();
             } else if (status == 2) {
                 toast("Successfully email sent!", {

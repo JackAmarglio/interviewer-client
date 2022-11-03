@@ -2,16 +2,15 @@ import React from 'react';
 import { Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import { Button } from "@mui/material"
-import { useHistory } from 'react-router-dom';
-import { Navigate } from 'react-router';
+import { useNavigate } from 'react-router-dom';
 const Typecard = (props) => {
-    const history = useHistory();
+    const history = useNavigate();
     const setUserType = () => {
         if (props.type == 'interpreter') {
-            history.push('/signup');
+            history('/signup');
         }
         else {
-            history.push('/signuporg');
+            history('/signuporg');
         }
     }
 

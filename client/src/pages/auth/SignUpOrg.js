@@ -16,7 +16,7 @@ import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { RegisterAsClient } from "../../utils/auth";
 import { toast } from 'react-toastify';
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { SITE_KEY } from '../../env';
 import * as isEmail from "is-email";
@@ -40,7 +40,7 @@ function SignUpOrg(props) {
         g_captcha_response: ""
     });
     const { firstName, email, password, confirmpassword, companyInfo, address, website, contact } = state;
-    const history = useHistory()
+    const history = useNavigate()
 
     const handleSubmit = function (event) {
         event.preventDefault();
@@ -91,7 +91,7 @@ function SignUpOrg(props) {
                 return;
             }
         }));
-        history.push("/signin")
+        history("/signin")
     };
 
     const agreedTerms = function () {

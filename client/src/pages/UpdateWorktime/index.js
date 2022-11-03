@@ -9,7 +9,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableFooter from '@mui/material/TableFooter';
 import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
+import TableHead from '@mui/material/TableHead';
 import Paper from '@mui/material/Paper';
+import { Typography } from "@mui/material";
 import IconButton from '@mui/material/IconButton';
 import FirstPageIcon from '@mui/icons-material/FirstPage';
 import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
@@ -83,14 +85,21 @@ TablePaginationActions.propTypes = {
   rowsPerPage: PropTypes.number.isRequired,
 };
 
-
-export default function InterpreterData() {
+export default function UpdateWorktime() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [interpreterData, setInterpreterData] = useState([])
   const [searched, setSearched] = useState("");
   const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date())
+  const [totaltime, setTotalTime] = useState(0)
   const navigate = useNavigate()
+  const year1 = startDate.getFullYear()
+  const month1 = startDate.getMonth() + 1
+  const day1 = startDate.getDate()
+  const year2 = endDate.getFullYear()
+  const month2 = endDate.getMonth() + 1
+  const day2 = endDate.getDate()
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
@@ -105,37 +114,38 @@ export default function InterpreterData() {
   };
 
   const getContent = () => {
-    let date = startDate.getDate()
-    let month = startDate.getMonth() + 1
-    let year = startDate.getFullYear()
+    const url = window.location.href
+    const userId = url.substring(url.indexOf("user-info/:") + 11, url.length);
+    console.log(userId, 'url')
     axios
-      .get(`${API_URL}/auth/interpreterinfo`, { params: {
-        day: date,
-        month: month,
-        year: year
+      .get(`${API_URL}/auth/user_info`, { params: {
+        userId,
+        day: day1,
+        month: month1,
+        year: year1
       }
     })
       .then(res => {
-        const data = res.data.data
-        let interpreter = []
-        data.map(item => {
-          if (item.email != "d.kurtiedu@gmail.com") {
-            if (item.date) {
-              const _date = item.date.find(work => work.year == year && work.month == month && work.day == date)
-              const newItem = {...item, date: _date}  
-              interpreter.push(newItem)
-            } else {
-              interpreter.push(item)
+        const data = res.data.data.date
+        let total = 0
+        let interpreters = []
+        data.map((item, index) => {
+            const a1 = new Date(item.year, item.month - 1 , item.day);
+            const a2 = new Date(year1, month1 - 1, day1);
+            const a3 = new Date(year2, month2 - 1, day2);
+            if (a1 >= a2 && a1 <= a3) {
+                total += item.worktime
+                interpreters.push(item)
             }
-          }
         })
-        setInterpreterData(interpreter)
+        setInterpreterData(interpreters)
+        setTotalTime(total)
       })
   }
 
   useEffect(() => {
     getContent();
-  }, [startDate])
+  }, [startDate, endDate])
 
   const requestSearch = (searchedVal) => {
     setSearched(searchedVal.target.value)
@@ -188,66 +198,66 @@ export default function InterpreterData() {
 
   return (
     <Box>
-      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <TextField
-          value={searched}
-          placeholder="insert text to search any data"
-          onChange={(searchVal) => requestSearch(searchVal)}
-          onCancelSearch={() => cancelSearch()}
-          style={{ minWidth: '500px' }}
-        />
+      <Box style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '50px', padding: '20px' }}>
         <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
-        <Button onClick={() => saveData()}>Save</Button>
+        <DatePicker className="form-control" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
+        <Button className="btn_save" onClick={() => saveData()}>Save</Button>
       </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
+          <TableHead>
+            <TableRow>
+              <TableCell align='left'>No</TableCell>
+              <TableCell align='center'>Start Date</TableCell>
+              <TableCell align="center">End Date</TableCell>
+              <TableCell align="center">Language</TableCell>  
+              <TableCell align="right" colSpan={4}>Work Time</TableCell>
+            </TableRow>
+          </TableHead>
           <TableBody>
             {(rowsPerPage > 0
               ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : interpreterData
-            ).map((row) => (
-              <TableRow key={row.name} onClick={() => navigate(`/user-info/:${row._id}`) }>
-                <TableCell component="th" scope="row">
-                  {row._id}
-                </TableCell>
-                <TableCell component="th" scope="row">
-                  {row.firstName}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
-                  {row.lastName}
-                </TableCell>
-                {row.availableTime == "available" &&
-                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
-                    {row.availableTime}
+            ).map((row, index) => (
+              <TableRow>
+                <TableCell style={{ background: 'black', color: 'white' }}>{index + 1}</TableCell>
+                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
+                    {row.year}-{row.month}-{row.day}
                   </TableCell>
                 }
-                {row.availableTime == "notAvailable" &&
-                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
-                    {row.availableTime}
+                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
+                    {row.year}-{row.month}-{row.day}
                   </TableCell>
                 }
-                {row.availableTime == "schedule" &&
-                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
-                    {row.availableTime}
+                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
+                    {row.language}
                   </TableCell>
                 }
-                <TableCell style={{ width: 160 }} align="center">
-                  {row.language}
-                </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
-                  {row.phoneNumber}
-                </TableCell>
-                <TableCell>
-                  <input value={row.date ? row.date.worktime : 0} onChange={(e) => updateTime(e, row._id)} />
+                <TableCell style={{ background: 'black', color: 'white' }} align="right">
+                  {row.worktime}
                 </TableCell>
               </TableRow>
             ))}
-
             {emptyRows > 0 && (
               <TableRow style={{ height: 53 * emptyRows }}>
                 <TableCell colSpan={6} />
               </TableRow>
             )}
+            {(totaltime / 60 / 24 > 1) && <TableRow>
+              <TableCell colSpan={5} align='right'>
+                Total Time {(totaltime / 60 / 24).toFixed(0)} day {((totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60) / 24).toFixed(0)} hours {totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60 -  ((totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60) / 24).toFixed(0) * 60} mins
+              </TableCell>
+            </TableRow> }
+            {(totaltime / 60 > 1) && <TableRow>
+              <TableCell colSpan={5} align='right'>
+                Total Time {(totaltime / 60).toFixed(0) } hours {totaltime - (totaltime / 60).toFixed(0) * 60} mins
+              </TableCell>
+            </TableRow> }
+            {(totaltime / 60 < 1) && <TableRow>
+              <TableCell colSpan={5} align='right'>
+                Total Time {totaltime} min
+              </TableCell>
+            </TableRow> }
           </TableBody>
           <TableFooter>
             <TableRow>

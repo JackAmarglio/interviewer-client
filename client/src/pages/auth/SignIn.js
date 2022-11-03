@@ -14,13 +14,13 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { HeaderBar } from "../layout/HeaderBar";
 import { useState } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../env";
 import axios from "axios";
 const theme = createTheme();
 
 function SignIn(props) {
-    const history = useHistory();
+    const history = useNavigate();
     const [state, setState] = useState({
         password: "",
         email: ""
@@ -31,7 +31,7 @@ function SignIn(props) {
         axios
             .post(`${API_URL}/auth/login`, state)
             .then((res) => {
-                history.push("/dashboard:" + res.data.id)
+                history("/dashboard/:" + res.data.id)
             })
     };
     const handleChange = function (event) {

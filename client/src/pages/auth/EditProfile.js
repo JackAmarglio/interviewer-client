@@ -17,7 +17,6 @@ import { connect } from "react-redux";
 import { useEffect, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { getUserInfo, updateUserInfo } from "../../utils/auth";
-import { useHistory } from "react-router-dom";
 import Usertype from "../usertype";
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { toast } from "react-toastify";

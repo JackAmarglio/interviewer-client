@@ -3,14 +3,14 @@ import * as React from 'react';
 import { Toolbar, AppBar, Box, Typography, Button, Avatar, Menu, MenuItem } from "@mui/material";
 import { deleteUserInfo, getUserInfo, LogOut } from "../../utils/auth";
 import { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { toast } from "react-toastify";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 // import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 function HeaderBar(props) {
     const { loggedIn, dispatch } = props;
-    const history = useHistory();
+    const history = useNavigate();
     const [info, setInfo] = useState({
         firstName: "",
         lastName: ""
@@ -18,7 +18,7 @@ function HeaderBar(props) {
     const [isLoading, setIsLoading] = useState(false);
     const handleLogout = function () {
         dispatch(LogOut());
-        history.push("/")
+        history("/")
     };
 
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -27,13 +27,13 @@ function HeaderBar(props) {
         setAnchorEl(event.currentTarget);
     };
     const gotoProfile = () => {
-        history.push('/profile')
+        history('/profile')
     }
     const handleClose = () => {
         setAnchorEl(null);
     };
     const clickHomeButton = () => {
-        history.push('/');
+        history('/');
     }
     const handleSubmit = function (event) {
         //  alert("sf");

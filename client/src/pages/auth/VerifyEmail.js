@@ -5,14 +5,14 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { HeaderBar } from "../layout/HeaderBar";
 import { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { VerifyEmail as verifyEmail } from "../../utils/auth";
 // import LoadingIndicator from "../../components/LoadingIndicator";
 import { toast } from 'react-toastify';
 const theme = createTheme();
 function VerifyEmail(props) {
     const { dispatch } = props;
-    const history = useHistory();
+    const history = useNavigate();
     const [hasError, setHasError] = useState(true);
     const [verified, setVerified] = useState(false);
     const [isLoading, setIsLoading] = useState(true);

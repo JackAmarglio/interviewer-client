@@ -24,7 +24,13 @@
 .form-control {
     padding: 4px 10px !important;
     height: 38px !important;
-    margin-left: 30px;
+}
+
+.btn_save {
+    border: 1px solid black !important;
+    background: black !important;
+    color: white !important;
+    margin-left: auto !important;
 }
 
 .form-control1 {

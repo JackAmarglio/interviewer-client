@@ -16,7 +16,7 @@ import { connect } from "react-redux";
 import { createRef, useState } from "react";
 import { HeaderBar } from "../layout/HeaderBar";
 import { Register } from "../../utils/auth";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import * as isEmail from "is-email";
 import { toast } from 'react-toastify';
 import ReCAPTCHA from "react-google-recaptcha";
@@ -40,7 +40,7 @@ function SignUp(props) {
         language: ""
     });
     const recaptchaRef = createRef();
-    const history = useHistory()
+    const history = useNavigate()
     const [isLoading, setIsLoading] = useState(false);
     const { firstName, lastName, email, password, confirmpassword, language, experience, availableTime, location, phoneNumber } = state;
     const handleSubmit = function (event) {
@@ -97,7 +97,7 @@ function SignUp(props) {
                 return;
             }
         }));
-        history.push("/signin")
+        history("/signin")
     };
     const agreedTerms = function () {
         setState({ ...state, agreeTerms: !state.agreeTerms });
