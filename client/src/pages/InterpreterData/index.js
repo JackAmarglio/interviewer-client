@@ -196,8 +196,10 @@ export default function InterpreterData() {
           onCancelSearch={() => cancelSearch()}
           style={{ minWidth: '500px' }}
         />
-        <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
-        <Button onClick={() => saveData()}>Save</Button>
+        <Box>
+          <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
+        {/* <Button onClick={() => saveData()}>Save</Button> */}
+        </Box>
       </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 500 }} aria-label="custom pagination table">
