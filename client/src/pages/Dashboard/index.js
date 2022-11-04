@@ -167,7 +167,7 @@ const Dashboard = () => {
                     <DatePicker className="form-control1" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
                     <DatePicker className="form-control2" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
                 </Box> */}
-                <Box padding="80px" display="flex" >
+                <Box padding="80px" display="flex">
                     <Grid item xs={6}>
                         <ScrollAnimation animateOnce={true} animateIn="animate__animated animate__fadeInRight">
                             <img src={Logo} width="100%" height="350px" alt="logoImage" />
