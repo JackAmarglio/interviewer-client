@@ -17,13 +17,15 @@ const Welcome = () => {
     <Box style={{ background: "black", padding: '20px' }}>
       <Box sx={{ flexGrow: 1, overflowX: "hidden" }}>
         <Grid container spacing={4}>
-          <Box display="flex">
-            <video width="300" height="200" autoPlay muted loop style={{ marginTop: '50px', marginLeft: '30px' }}>
-              <source src="/1.webm" type="video/webm"/>
-            </video>
-            <ScrollAnimation animateOnce={false} animateIn="animate__animated animate__fadeInLeft">
-              <img src="logo.png" alt="" width="400px" style={{ marginTop: "40px" }} />
-            </ScrollAnimation>
+          <Box display="flex" className="welcome">
+            <Box display="flex" className="welcome_header">
+              <video width="300" height="200" autoPlay muted loop style={{ marginTop: '50px', marginLeft: '30px' }}>
+                <source src="/1.webm" type="video/webm"/>
+              </video>
+              <ScrollAnimation animateOnce={false} animateIn="animate__animated animate__fadeInLeft">
+                <img src="1.png" alt="" className="logo_" />
+              </ScrollAnimation>
+            </Box>
             <ScrollAnimation animateOnce={false} animateIn="animate__animated animate__fadeInRight">
               <Typography marginTop="30px" marginLeft="30px" color="white">
                 <Typography color="white" fontSize="25px" paddingTop="30px" fontStyle="bold">Neon-Languages LLC</Typography><br />

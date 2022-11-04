@@ -234,7 +234,7 @@ export default function UpdateWorktime() {
                   </TableCell>
                 }
                 <TableCell style={{ background: 'black', color: 'white' }} align="right">
-                  {row.worktime}
+                  <input value={row.date ? row.worktime : 0} onChange={(e) => updateTime(e, row._id)} />
                 </TableCell>
               </TableRow>
             ))}

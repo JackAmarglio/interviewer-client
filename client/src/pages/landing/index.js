@@ -17,8 +17,8 @@ function LandingPage() {
     return (
         <Box sx={{ flexGrow: 1, overflowX: "hidden" }}>
             {!anim &&
-                <Box className="animate__animated animate__flipInY animate__delay-1s animate__zoomOutRight">
-                    <img src="logo.png" alt="" />
+                <Box className="animate__animated animate__flipInY animate__delay-1s animate__zoomOutRight" style={{alignItems: 'center', justifyContent:'center', display: 'flex', verticalAlign: 'middle'}}>
+                    <img src="logo.png" alt="" className="logo" />
                 </Box>
             }
             {anim &&

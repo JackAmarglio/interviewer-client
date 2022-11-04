@@ -33,6 +33,46 @@
     margin-left: auto !important;
 }
 
+.logo_ {
+    width: 400px;
+    margin-top: 40px;
+}
+
+@media only screen and (max-width: 1024px) {
+    .welcome {
+        flex-direction: column;
+    }
+    .logo_ {
+        width: 300px;
+        margin-top: 70px;
+    }
+}
+
+
+
+@media only screen and (max-width: 660px) {
+    .welcome_header {
+        flex-direction: column;
+        align-items: center;
+    }
+    .logo_ {
+        margin-top: 0px;
+        width: 400px;
+    }
+}
+
+@media only screen and  (max-width: 460px) {
+    .logo_ {
+        width: 300px;
+    }
+}
+
+.logo {
+    width: 400px;
+    height: 400px;
+    vertical-align: middle;
+}
+
 .form-control1 {
     padding: 4px 10px !important;
     height: 38px !important;
