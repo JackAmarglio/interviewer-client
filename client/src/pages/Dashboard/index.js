@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom"
 import countryList from 'react-select-country-list'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Logo from "../../Images/logo.png"
 
 const Dashboard = () => {
     const GreenSwitch = styled(Switch)(({ theme }) => ({
@@ -54,6 +55,7 @@ const Dashboard = () => {
     const year2 = endDate.getFullYear()
     const month2 = endDate.getMonth() + 1
     const day2 = endDate.getDate()
+    const navigate = useNavigate()
 
     const handleChangeExperience = (event) => {
         setYear(event.target.value);
@@ -159,16 +161,16 @@ const Dashboard = () => {
                 <Button onClick={() => history("/interpreterinfo")}>Interpreter Data</Button>
             </Box>}
             
-            {isClient === "Interpreter" && adminEmail !== email && <Box>
+            {isClient === "Interpreter" && adminEmail !== email && <Box backgroundColor="black" color="white" >
                 <HeaderBar />
-                <Box display="flex">
+                {/* <Box display="flex">
                     <DatePicker className="form-control1" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
                     <DatePicker className="form-control2" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
-                </Box>
-                <Box padding="80px" display="flex">
+                </Box> */}
+                <Box padding="80px" display="flex" >
                     <Grid item xs={6}>
                         <ScrollAnimation animateOnce={true} animateIn="animate__animated animate__fadeInRight">
-                            <img src="logo.png" width="100%" height="350px" alt="logoImage" />
+                            <img src={Logo} width="100%" height="350px" alt="logoImage" />
                         </ScrollAnimation>
                     </Grid>
                     
@@ -179,7 +181,7 @@ const Dashboard = () => {
                         justifyContent="center">
                         <Box display="flex">
                             <Typography style={{ marginTop: '15px' }}>Languages</Typography>
-                            <TextField id="outlined-basic" label="lang" variant="outlined" style={{ marginLeft: '50px', width: '200px' }} value={lang} onChange={(e) => setLang(e.target.value)} />
+                            <TextField id="outlined-basic" label="lang" variant="outlined" style={{ marginLeft: '50px', width: '200px', background: 'white' }} value={lang} onChange={(e) => setLang(e.target.value)} />
                         </Box>
                         <Box display="flex" marginTop="30px">
                             <Typography>Experience</Typography>
@@ -189,7 +191,7 @@ const Dashboard = () => {
                                 value={year}
                                 label="Year"
                                 onChange={handleChangeExperience}
-                                style={{ height: '40px', width: '200px', marginLeft: '50px' }}
+                                style={{ height: '40px', width: '200px', marginLeft: '50px', background: 'white' }}
                             >
                                 <MenuItem value={1}>One</MenuItem>
                                 <MenuItem value={2}>Two</MenuItem>
@@ -248,11 +250,12 @@ const Dashboard = () => {
                             />
                         </Box>
                         <Box display="flex" margin="30px 0px 30px 30px">
-                            <Typography style={{ marginTop: '5px' }}>Work Time</Typography>
+                            {/* <Typography style={{ marginTop: '5px' }}>Work Time</Typography>
                             <TextField
                                 value={time}
                                 style={{ marginLeft: '55px', width: '200px', height: '30px' }}
-                            />
+                            /> */}
+                            <Button style={{ border: '1px solid white', padding: '10px' }} onClick={() => {navigate(`/interpreterinfo/:${userId}`)}}>Work Time</Button>
                         </Box>
                         <Grid
                             container
@@ -261,13 +264,13 @@ const Dashboard = () => {
                             alignItems="center"
                             justifyContent="center"
                         >
-                            <Button style={{ border: '1px solid blue', width: '100px', marginTop: '30px' }} onClick={() => saveInterpreterInfo()}>Save</Button>
+                            <Button style={{ border: '1px solid white', width: '100px', marginTop: '30px' }} onClick={() => saveInterpreterInfo()}>Save</Button>
                         </Grid>
                     </Grid>
                 </Box>
             </Box>
             }
-            {isClient === "client" && adminEmail !== email && <Box>
+            {isClient === "client" && adminEmail !== email && <Box backgroundColor="black" color="white" >
                 <HeaderBar />
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>
