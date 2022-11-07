@@ -67,6 +67,12 @@
     }
 }
 
+@media only screen and (max-width: 760px) {
+    .signup{
+        flex-direction: column
+    };
+}
+
 .logo {
     width: 400px;
     height: 400px;
