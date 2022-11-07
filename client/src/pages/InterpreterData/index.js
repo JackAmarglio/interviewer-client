@@ -196,6 +196,7 @@ export default function InterpreterData() {
       }
       return _result;
     })
+    console.log(interpreterData, '9999')
   }
 
   return (
