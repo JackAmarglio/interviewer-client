@@ -129,10 +129,10 @@ const SendVerifyEmail = (callback) => {
         };
         _axios()(options).then((resp) => {
 
-            if (resp.data.status == 1) {
+            if (resp.data.status === 1) {
                 callback && callback(1);
             }
-            else if (resp.data.status == 2) {
+            else if (resp.data.status === 2) {
                 callback && callback(2);
             } else callback && callback(3);
         }).catch(err => {

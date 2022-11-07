@@ -107,7 +107,7 @@ export default function InterpreterData() {
         const data = res.data.data
         let interpreter = []
         data.map(item => {
-          if (item.email != "d.kurtiedu@gmail.com") {
+          if (item.email !== "d.kurtiedu@gmail.com") {
             interpreter.push(item)
           }
         })

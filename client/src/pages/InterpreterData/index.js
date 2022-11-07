@@ -119,9 +119,9 @@ export default function InterpreterData() {
         const data = res.data.data
         let interpreter = []
         data.map(item => {
-          if (item.email != "d.kurtiedu@gmail.com") {
+          if (item.email !== "d.kurtiedu@gmail.com") {
             if (item.date) {
-              const _date = item.date.find(work => work.year == year && work.month == month && work.day == date)
+              const _date = item.date.find(work => work.year === year && work.month === month && work.day === date)
               const newItem = {...item, date: _date}  
               interpreter.push(newItem)
             } else {
@@ -157,7 +157,7 @@ export default function InterpreterData() {
       const _result = [..._prev]
       const index = _result.findIndex(_val => _val._id === id);
       if (index >= 0) {
-        if(_result[index].date != undefined) {
+        if(_result[index].date !== undefined) {
           _result[index].date.worktime = e.target.value
         }
         else {
@@ -180,7 +180,7 @@ export default function InterpreterData() {
     axios
       .post(`${API_URL}/auth/save`, update)
       .then((res) => {
-        if (res.data.data == 'success') {
+        if (res.data.data === 'success') {
           alert("Successfully saved")
         }
       })
@@ -188,6 +188,15 @@ export default function InterpreterData() {
 
   const updateAvailability = (e, id) => {
     console.log(e.target.value, '---')
+    setInterpreterData(_prev => {
+      const _result = [..._prev]
+      const index = _result.findIndex(_val => _val._id === id);
+      if (index >= 0) {
+          _result[index].availableTime = e.target.value
+          _result[index].updated = true;
+      }
+      return _result;
+    })
     console.log(interpreterData, '9999')
   }
 
@@ -223,17 +232,17 @@ export default function InterpreterData() {
                 <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row.lastName}
                 </TableCell>
-                {row.availableTime == "available" &&
+                {row.availableTime === "available" &&
                   <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
-                {row.availableTime == "notAvailable" &&
+                {row.availableTime === "notAvailable" &&
                   <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
-                {row.availableTime == "schedule" &&
+                {row.availableTime === "schedule" &&
                   <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>

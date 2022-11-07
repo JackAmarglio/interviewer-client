@@ -41,7 +41,7 @@ function ResetPassword(props) {
             });
             return;
         }
-        if (state.newpassword != state.confirmpassword) {
+        if (state.newpassword !== state.confirmpassword) {
             toast("Password mismatch!", {
                 type: "warning"
             });

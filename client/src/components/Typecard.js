@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 const Typecard = (props) => {
     const history = useNavigate();
     const setUserType = () => {
-        if (props.type == 'interpreter') {
+        if (props.type === 'interpreter') {
             history('/signup');
         }
         else {

@@ -73,7 +73,7 @@ function SignUp(props) {
             });
             return;
         }
-        if (state.password != state.confirmpassword) {
+        if (state.password !== state.confirmpassword) {
             toast("Password mismatch!", {
                 type: "warning"
             });

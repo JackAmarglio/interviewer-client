@@ -169,7 +169,7 @@ export default function InterpreterWork() {
       const _result = [..._prev]
       const index = _result.findIndex(_val => _val._id === id);
       if (index >= 0) {
-        if(_result[index].date != undefined) {
+        if(_result[index].date !== undefined) {
           _result[index].date.worktime = e.target.value
         }
         else {
@@ -192,7 +192,7 @@ export default function InterpreterWork() {
     axios
       .post(`${API_URL}/auth/save`, update)
       .then((res) => {
-        if (res.data.data == 'success') {
+        if (res.data.data === 'success') {
           alert("Successfully saved")
         }
       })

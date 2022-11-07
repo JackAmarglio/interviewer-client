@@ -22,22 +22,22 @@ function VerifyStatus(props) {
         setIsLoading(true);
         dispatch(SendVerifyEmail((status, message) => {
             setIsLoading(false);
-            if (status == 1) {
+            if (status === 1) {
                 // toast("Already You verified email!",{                    
                 //     type: "success"                    
                 // });
                 history('/SuccessScreen');
                 window.location.reload();
-            } else if (status == 2) {
+            } else if (status === 2) {
                 toast("Successfully email sent!", {
                     type: "success"
                 });
                 setIsEmailSent(true);
-            } else if (status == 3) {
+            } else if (status === 3) {
                 toast("Error while send email!", {
                     type: "error"
                 });
-            } else if (status == 0) {
+            } else if (status === 0) {
                 toast("Error while send email on API!", {
                     type: "error"
                 });

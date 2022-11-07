@@ -79,7 +79,7 @@ function HeaderBar(props) {
 
                         Interpreter-Client
                     </Typography>
-                    {loggedIn == false && (
+                    {loggedIn === false && (
                         <>
                             <Button color="inherit" href="/signin">
                                 Sign In
@@ -98,7 +98,7 @@ function HeaderBar(props) {
                             </Box>
                         </>
                     )}
-                    {loggedIn == true && (
+                    {loggedIn === true && (
                         <React.Fragment>
                             <Button
                                 id="basic-button"
