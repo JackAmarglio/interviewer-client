@@ -4,7 +4,7 @@ import axios from "axios";
 import { ToastContainer } from 'react-toastify';
 import "./App.css";
 import 'react-toastify/dist/ReactToastify.css';
-// axios.defaults.withCredentials = true;
+axios.defaults.withCredentials = true;
 
 function App() {
     return (
