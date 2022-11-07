@@ -187,15 +187,7 @@ export default function InterpreterData() {
   }
 
   const updateAvailability = (e, id) => {
-    setInterpreterData(_prev => {
-      const _result = [..._prev]
-      const index = _result.findIndex(_val => _val._id === id);
-      if (index >= 0) {
-          _result[index].availableTime = e.target.value
-          _result[index].updated = true;
-      }
-      return _result;
-    })
+    console.log(e.target.value, '---')
     console.log(interpreterData, '9999')
   }
 
