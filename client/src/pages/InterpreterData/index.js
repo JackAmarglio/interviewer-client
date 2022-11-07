@@ -231,17 +231,17 @@ export default function InterpreterData() {
                   {row.lastName}
                 </TableCell>
                 {row.availableTime == "available" &&
-                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
                 {row.availableTime == "notAvailable" &&
-                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
                 {row.availableTime == "schedule" &&
-                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
                     <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
