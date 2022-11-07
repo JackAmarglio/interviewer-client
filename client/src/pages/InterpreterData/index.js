@@ -186,6 +186,18 @@ export default function InterpreterData() {
       })
   }
 
+  const updateAvailability = (e, id) => {
+    setInterpreterData(_prev => {
+      const _result = [..._prev]
+      const index = _result.findIndex(_val => _val._id === id);
+      if (index >= 0) {
+          _result[index].availableTime = e.target.value
+          _result[index].updated = true;
+      }
+      return _result;
+    })
+  }
+
   return (
     <Box>
       <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -208,35 +220,35 @@ export default function InterpreterData() {
               ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : interpreterData
             ).map((row) => (
-              <TableRow key={row.name} onClick={() => navigate(`/user-info/:${row._id}`) }>
-                <TableCell component="th" scope="row">
+              <TableRow key={row.name}>
+                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row._id}
                 </TableCell>
-                <TableCell component="th" scope="row">
+                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row.firstName}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row.lastName}
                 </TableCell>
                 {row.availableTime == "available" &&
-                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
-                    {row.availableTime}
+                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
                 {row.availableTime == "notAvailable" &&
-                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
-                    {row.availableTime}
+                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
                 {row.availableTime == "schedule" &&
-                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
-                    {row.availableTime}
+                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
                   </TableCell>
                 }
-                <TableCell style={{ width: 160 }} align="center">
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row.language}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center">
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
                   {row.phoneNumber}
                 </TableCell>
                 <TableCell>
