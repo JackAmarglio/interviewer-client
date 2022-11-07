@@ -74,7 +74,7 @@ const Dashboard = () => {
             setAvailable(false)
             setSchedule(false)
         }
-        setAvailability("notAvailable")
+        setAvailability("-")
     };
     const handleChangeSchedule = (event) => {
         setSchedule(event.target.checked);

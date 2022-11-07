@@ -109,12 +109,13 @@ export default function InterpreterData() {
     let month = startDate.getMonth() + 1
     let year = startDate.getFullYear()
     axios
-      .get(`${API_URL}/auth/interpreterinfo`, { params: {
-        day: date,
-        month: month,
-        year: year
-      }
-    })
+      .get(`${API_URL}/auth/interpreterinfo`, {
+        params: {
+          day: date,
+          month: month,
+          year: year
+        }
+      })
       .then(res => {
         const data = res.data.data
         let interpreter = []
@@ -122,7 +123,7 @@ export default function InterpreterData() {
           if (item.email !== "d.kurtiedu@gmail.com") {
             if (item.date) {
               const _date = item.date.find(work => work.year === year && work.month === month && work.day === date)
-              const newItem = {...item, date: _date}  
+              const newItem = { ...item, date: _date }
               interpreter.push(newItem)
             } else {
               interpreter.push(item)
@@ -152,16 +153,16 @@ export default function InterpreterData() {
   };
 
   const updateTime = (e, id) => {
-    
+
     setInterpreterData(_prev => {
       const _result = [..._prev]
       const index = _result.findIndex(_val => _val._id === id);
       if (index >= 0) {
-        if(_result[index].date !== undefined) {
+        if (_result[index].date !== undefined) {
           _result[index].date.worktime = e.target.value
         }
         else {
-          _result[index].date = {"worktime": e.target.value, "year": startDate.getFullYear(), 'month': startDate.getMonth() + 1, 'day': startDate.getDate()}
+          _result[index].date = { "worktime": e.target.value, "year": startDate.getFullYear(), 'month': startDate.getMonth() + 1, 'day': startDate.getDate() }
         }
         _result[index].updated = true;
       }
@@ -169,35 +170,29 @@ export default function InterpreterData() {
     })
   }
 
-  const saveData = () => {
-    const updatedState = interpreterData.filter(_row => _row.updated)
-    let year = startDate.getFullYear();
-    let month = startDate.getMonth() + 1;
-    let date = startDate.getDate();
-    let update = {
-      updatedState, year, month, date
-    }
+  const saveData = (id) => {
+    console.log(id, 'id')
+    const updatedState = interpreterData.find(data => data._id = id)
+
     axios
-      .post(`${API_URL}/auth/save`, update)
+      .post(`${API_URL}/auth/availability`, updatedState)
       .then((res) => {
-        if (res.data.data === 'success') {
+        if (res.data === 'updated') {
           alert("Successfully saved")
         }
       })
   }
 
   const updateAvailability = (e, id) => {
-    console.log(e.target.value, '---')
     setInterpreterData(_prev => {
-      const _result = [..._prev]
-      const index = _result.findIndex(_val => _val._id === id);
+      const _result = [..._prev];
+      const index = _prev.findIndex(_val => _val._id === id);
       if (index >= 0) {
-          _result[index].availableTime = e.target.value
-          _result[index].updated = true;
+        _result[index].availableTime = e.target.value
+        _result[index].updated = true;
       }
       return _result;
     })
-    console.log(interpreterData, '9999')
   }
 
   return (
@@ -212,7 +207,7 @@ export default function InterpreterData() {
         />
         <Box>
           <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
-        {/* <Button onClick={() => saveData()}>Save</Button> */}
+          {/* <Button onClick={() => saveData()}>Save</Button> */}
         </Box>
       </Box>
       <TableContainer component={Paper}>
@@ -222,39 +217,30 @@ export default function InterpreterData() {
               ? interpreterData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
               : interpreterData
             ).map((row) => (
-              <TableRow key={row.name}>
-                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`) }>
+              <TableRow key={row._id}>
+                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`)}>
                   {row._id}
                 </TableCell>
-                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                <TableCell component="th" scope="row" onClick={() => navigate(`/user-info/:${row._id}`)}>
                   {row.firstName}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`)}>
                   {row.lastName}
                 </TableCell>
-                {row.availableTime === "available" &&
-                  <TableCell style={{ width: 160, background: 'green', color: 'white' }} align="center">
-                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
-                  </TableCell>
-                }
-                {row.availableTime === "notAvailable" &&
-                  <TableCell style={{ width: 160, background: 'red', color: 'white' }} align="center">
-                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
-                  </TableCell>
-                }
-                {row.availableTime === "schedule" &&
-                  <TableCell style={{ width: 160, background: 'yellow', color: 'black' }} align="center">
-                    <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
-                  </TableCell>
-                }
-                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                <TableCell style={{ width: 160, background: row.availableTime === "available" ? 'green' : row.availableTime === "-" ? "red" : row.availableTime === "schedule" ? "yellow" : undefined, color: 'black' }} align="center">
+                  <input value={row.availableTime} onChange={(e) => updateAvailability(e, row._id)} />
+                </TableCell>
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`)}>
                   {row.language}
                 </TableCell>
-                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`) }>
+                <TableCell style={{ width: 160 }} align="center" onClick={() => navigate(`/user-info/:${row._id}`)}>
                   {row.phoneNumber}
                 </TableCell>
                 <TableCell>
                   <input value={row.date ? row.date.worktime : 0} onChange={(e) => updateTime(e, row._id)} />
+                </TableCell>
+                <TableCell>
+                  <Button onClick={() => saveData(row._id)}>Save</Button>
                 </TableCell>
               </TableRow>
             ))}
