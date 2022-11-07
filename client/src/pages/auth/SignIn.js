@@ -28,6 +28,7 @@ function SignIn(props) {
     const { password, email } = state;
     const handleSubmit = function (event) {
         event.preventDefault();
+        console.log(state, 'state')
         axios
             .post(`${API_URL}/auth/login`, state)
             .then((res) => {
