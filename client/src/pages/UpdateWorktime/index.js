@@ -22,7 +22,6 @@ import { API_URL } from "../../env"
 import { TextField, Button } from '@mui/material';
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useNavigate } from 'react-router-dom';
 
 function TablePaginationActions(props) {
   const theme = useTheme();
@@ -93,13 +92,13 @@ export default function UpdateWorktime() {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date())
   const [totaltime, setTotalTime] = useState(0)
-  const navigate = useNavigate()
   const year1 = startDate.getFullYear()
   const month1 = startDate.getMonth() + 1
   const day1 = startDate.getDate()
   const year2 = endDate.getFullYear()
   const month2 = endDate.getMonth() + 1
   const day2 = endDate.getDate()
+  const [flag, setFlag] = useState(false)
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - interpreterData.length) : 0;
@@ -127,6 +126,7 @@ export default function UpdateWorktime() {
     })
       .then(res => {
         const data = res.data.data.date
+        const _id = res.data.data._id
         let total = 0
         let interpreters = []
         data.map((item, index) => {
@@ -135,10 +135,12 @@ export default function UpdateWorktime() {
             const a3 = new Date(year2, month2 - 1, day2);
             if (a1 >= a2 && a1 <= a3) {
                 total += item.worktime
+                item.id = _id
                 interpreters.push(item)
             }
         })
         setInterpreterData(interpreters)
+        console.log(interpreterData, 'data')
         setTotalTime(total)
       })
   }
@@ -168,7 +170,7 @@ export default function UpdateWorktime() {
       const index = _result.findIndex(_val => _val._id === id);
       if (index >= 0) {
         if(_result[index].date !== undefined) {
-          _result[index].date.worktime = e.target.value
+          _result[index].worktime = e.target.value
         }
         else {
           _result[index].date = {"worktime": e.target.value, "year": startDate.getFullYear(), 'month': startDate.getMonth() + 1, 'day': startDate.getDate()}
@@ -181,6 +183,7 @@ export default function UpdateWorktime() {
 
   const saveData = () => {
     const updatedState = interpreterData.filter(_row => _row.updated)
+    console.log(updatedState, 'id')
     let year = startDate.getFullYear();
     let month = startDate.getMonth() + 1;
     let date = startDate.getDate();
@@ -196,11 +199,82 @@ export default function UpdateWorktime() {
       })
   }
 
+  const add = () => {
+    const url = window.location.href
+    const userId = url.substring(url.indexOf("user-info/:") + 11, url.length);
+    const a = {
+      year: '',
+      month: '',
+      worktime: '',
+      flag: true,
+      date1: '',
+      date2: '',
+      language: '',
+      time: '',
+      updated: false,
+      _id: userId
+    }
+    setInterpreterData((_prev) => {
+      const t = [..._prev];
+      t.push(a)
+      return t
+    })
+  }
+
+  const addStartTime = (e, index) => {
+    const date = e;
+    setInterpreterData(_prev => {
+      const t = [..._prev]
+      const date1 = new Date(date);
+      t[index].date = {year: date1.getFullYear()}
+      t[index].date = {month: date1.getMonth() + 1}
+      t[index].date = {day: date1.getDate()}
+      t[index].date1 = date
+      t[index].updated = true
+      return t
+    })
+  }
+
+  const addEndTime = (e, index) => {
+    const date = e;
+    setInterpreterData(_prev => {
+      const t = [..._prev]
+      const date1 = new Date(date);
+      t[index].date = {year: date1.getFullYear()}
+      t[index].date = {month: date1.getMonth() + 1}
+      t[index].date = {day: date1.getDate()}
+      t[index].date2 = date
+      t[index].updated = true
+      return t
+    })
+  }
+
+  const addLanguage = (e, index) => {
+    const language = e.target.value
+    setInterpreterData(_prev => {
+      const t = [..._prev]
+      t[index].language = language
+      t[index].updated = true
+      return t
+    })
+  }
+
+  const addTime = (e, index) => {
+    const time = e.target.value
+    setInterpreterData(_prev => {
+      const t = [..._prev]
+      t[index].time = time
+      t[index].updated = true
+      return t
+    })
+  }
+
   return (
     <Box>
       <Box style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '50px', padding: '20px' }}>
         <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
         <DatePicker className="form-control" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
+        <Button className="btn_save" onClick={() => add()}>Add</Button>
         <Button className="btn_save" onClick={() => saveData()}>Save</Button>
       </Box>
       <TableContainer component={Paper}>
@@ -221,20 +295,18 @@ export default function UpdateWorktime() {
             ).map((row, index) => (
               <TableRow>
                 <TableCell style={{ background: 'black', color: 'white' }}>{index + 1}</TableCell>
-                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
-                    {row.year}-{row.month}-{row.day}
-                  </TableCell>
-                }
-                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
-                    {row.year}-{row.month}-{row.day}
-                  </TableCell>
-                }
-                {<TableCell style={{ background: 'black', color: 'white' }} align="center">
-                    {row.language}
-                  </TableCell>
+                <TableCell style={{ background: 'black', color: 'white' }} align="center">
+                  {row.flag ? <input type="date" value={row.date1} onChange={(e) => addStartTime(e.target.value, index)} />: <>{row.year}-{row.month}-{row.day} </>}
+                </TableCell>
+                <TableCell style={{ background: 'black', color: 'white' }} align="center">
+                  {row.flag ? <input type="date" value={row.date2} onChange={(e) => addEndTime(e.target.value, index)} />: <>{row.year}-{row.month}-{row.day} </>}
+                </TableCell>
+               {<TableCell style={{ background: 'black', color: 'white' }} align="center">
+                  {row.flag ? <input value={row.language} onChange={(e) => addLanguage(e, index)} /> : <>{row.language}</>}
+                </TableCell>
                 }
                 <TableCell style={{ background: 'black', color: 'white' }} align="right">
-                  <input value={row.worktime} onChange={(e) => updateTime(e, row._id)} />
+                  {row.flag ? <input value={row.time} onChange = {(e) => addTime(e, index)} /> : <input value={row.worktime} onChange={(e) => updateTime(e, row._id)} />}
                 </TableCell>
               </TableRow>
             ))}

@@ -118,11 +118,13 @@ export default function InterpreterData() {
       })
       .then(res => {
         const data = res.data.data
-        let interpreter = []
+        let interpreter = [] //year: string, month: string, 
         data.map(item => {
           if (item.email !== "d.kurtiedu@gmail.com") {
             if (item.date) {
-              const _date = item.date.find(work => work.year === year && work.month === month && work.day === date)
+              console.log(item, 'item')
+              const _date = item.date.find(work => work.year == year && work.month == month && work.day == date)
+              console.log(_date, 'date')
               const newItem = { ...item, date: _date }
               interpreter.push(newItem)
             } else {
