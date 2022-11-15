@@ -255,7 +255,7 @@ const Dashboard = () => {
                                 value={time}
                                 style={{ marginLeft: '55px', width: '200px', height: '30px' }}
                             /> */}
-                            <Button style={{ border: '1px solid white', padding: '10px' }} onClick={() => {navigate(`/interpreterinfo/:${userId}`)}}>Work Time</Button>
+                            <Button style={{ border: '1px solid white', padding: '10px', background: 'white', color: 'black' }} onClick={() => {navigate(`/interpreterinfo/:${userId}`)}}>Work Time</Button>
                         </Box>
                         <Grid
                             container
@@ -264,7 +264,7 @@ const Dashboard = () => {
                             alignItems="center"
                             justifyContent="center"
                         >
-                            <Button style={{ border: '1px solid white', width: '100px', marginTop: '30px' }} onClick={() => saveInterpreterInfo()}>Save</Button>
+                            <Button style={{ border: '1px solid white', width: '100px', marginTop: '30px', background: 'white', color: 'black' }} onClick={() => saveInterpreterInfo()}>Save</Button>
                         </Grid>
                     </Grid>
                 </Box>
@@ -275,7 +275,7 @@ const Dashboard = () => {
                 <Box padding="80px" display="flex">
                     <Grid item xs={6}>
                         <ScrollAnimation animateOnce={true} animateIn="animate__animated animate__fadeInRight">
-                            <img src="logo.png" width="100%" height="350px" alt="logoImage" />
+                            <img src={Logo} width="100%" height="350px" alt="logoImage" />
                         </ScrollAnimation>
                     </Grid>
                     <Grid item xs={6} container
@@ -285,7 +285,7 @@ const Dashboard = () => {
                         justifyContent="center">
                         <Box display="flex">
                             <Typography style={{ marginTop: '15px' }}>Company Name</Typography>
-                            <TextField id="outlined-basic" label="company" variant="outlined" style={{ marginLeft: '50px', width: '200px' }} value={company} onChange={(e) => setCompany(e.target.value)} />
+                            <TextField id="outlined-basic" label="company" variant="outlined" style={{ marginLeft: '50px', width: '200px', background: 'white' }} value={company} onChange={(e) => setCompany(e.target.value)} />
                         </Box>
                         <Box display="flex" marginTop="30px">
                             <Typography style={{ marginTop: '15px', marginLeft: '30px' }}>First Name</Typography>
@@ -295,7 +295,7 @@ const Dashboard = () => {
                                 type="first name"
                                 autoComplete="current-password"
                                 value={firstName}
-                                style={{ marginLeft: '55px', width: '200px', height: '30px' }}
+                                style={{ marginLeft: '55px', width: '200px', height: '50px', background: 'white' }}
                                 onChange={(e) => setFirstName(e.target.value)}
                             />
                         </Box>
@@ -307,7 +307,7 @@ const Dashboard = () => {
                                 type="last name"
                                 autoComplete="current-password"
                                 value={lastName}
-                                style={{ marginLeft: '55px', width: '200px', height: '30px' }}
+                                style={{ marginLeft: '55px', width: '200px', height: '50px', background: 'white' }}
                                 onChange={(e) => setLastName(e.target.value)}
                             />
                         </Box>
@@ -336,7 +336,7 @@ const Dashboard = () => {
                             alignItems="center"
                             justifyContent="center"
                         >
-                            <Button style={{ border: '1px solid blue', width: '100px', marginTop: '30px' }} onClick={() => saveClientInfo()}>Save</Button>
+                            <Button style={{ border: '1px solid blue', width: '100px', marginTop: '30px', background: 'white', color: 'black' }} onClick={() => saveClientInfo()}>Save</Button>
                         </Grid>
                     </Grid>
                 </Box>

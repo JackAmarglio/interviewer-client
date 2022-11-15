@@ -115,7 +115,6 @@ export default function UpdateWorktime() {
   const getContent = () => {
     const url = window.location.href
     const userId = url.substring(url.indexOf("user-info/:") + 11, url.length);
-    console.log(userId, 'url')
     axios
       .get(`${API_URL}/auth/user_info`, { params: {
         userId,
@@ -212,7 +211,9 @@ export default function UpdateWorktime() {
       language: '',
       time: '',
       updated: false,
-      _id: userId
+      id: userId,
+      hour: '',
+      minute: ''
     }
     setInterpreterData((_prev) => {
       const t = [..._prev];
@@ -269,12 +270,20 @@ export default function UpdateWorktime() {
     })
   }
 
+  const editOption = (index) => {
+    setInterpreterData(_prev => {
+      const t = [..._prev]
+      t[index].flag = true
+      return t
+    })
+  }
+
   return (
     <Box>
       <Box style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: '50px', padding: '20px' }}>
         <DatePicker className="form-control" selected={startDate} onChange={(date: Date) => setStartDate(date)} />
         <DatePicker className="form-control" selected={endDate} onChange={(date: Date) => setEndDate(date)} />
-        <Button className="btn_save" onClick={() => add()}>Add</Button>
+        <Button className="btn_add" onClick={() => add()}>Add</Button>
         <Button className="btn_save" onClick={() => saveData()}>Save</Button>
       </Box>
       <TableContainer component={Paper}>
@@ -308,6 +317,12 @@ export default function UpdateWorktime() {
                 <TableCell style={{ background: 'black', color: 'white' }} align="right">
                   {row.flag ? <input value={row.time} onChange = {(e) => addTime(e, index)} /> : <input value={row.worktime} onChange={(e) => updateTime(e, row._id)} />}
                 </TableCell>
+                <TableCell style={{ background: 'black', color: 'white' }} align="right">
+                  <Button variant="contained" color="success" onClick={() => editOption(index)}>Edit</Button>
+                </TableCell>
+                <TableCell style={{ background: 'black', color: 'white' }} align="right">
+                  <Button variant="contained" color="error">Delete</Button>
+                </TableCell>
               </TableRow>
             ))}
             {emptyRows > 0 && (
@@ -316,17 +331,17 @@ export default function UpdateWorktime() {
               </TableRow>
             )}
             {(totaltime / 60 / 24 > 1) && <TableRow>
-              <TableCell colSpan={5} align='right'>
+              <TableCell colSpan={7} align='right'>
                 Total Time {(totaltime / 60 / 24).toFixed(0)} day {((totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60) / 24).toFixed(0)} hours {totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60 -  ((totaltime - (totaltime / 60 / 24).toFixed(0) * 24 * 60) / 24).toFixed(0) * 60} mins
               </TableCell>
             </TableRow> }
             {(totaltime / 60 > 1) && <TableRow>
-              <TableCell colSpan={5} align='right'>
+              <TableCell colSpan={7} align='right'>
                 Total Time {(totaltime / 60).toFixed(0) } hours {totaltime - (totaltime / 60).toFixed(0) * 60} mins
               </TableCell>
             </TableRow> }
             {(totaltime / 60 < 1) && <TableRow>
-              <TableCell colSpan={5} align='right'>
+              <TableCell colSpan={7} align='right'>
                 Total Time {totaltime} min
               </TableCell>
             </TableRow> }
